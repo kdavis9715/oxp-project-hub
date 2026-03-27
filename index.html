@@ -427,12 +427,13 @@ body {
   font-family: var(--font-body); font-size: var(--type-para-sm);
   line-height: var(--type-para-sm-lh); color: var(--color-text-secondary);
 }
-.news-delete {
+.news-delete, .news-edit {
   background: none; border: none; cursor: pointer;
   color: var(--color-border-strong); font-size: 12px;
   padding: 2px 4px; border-radius: 3px; line-height: 1;
 }
 .news-delete:hover { color: var(--color-danger); background: #fce9e9; }
+.news-edit:hover   { color: var(--color-info);   background: #dbeeff; }
 
 /* Add panel */
 .news-add-panel {
@@ -585,7 +586,14 @@ hr { border: none; border-top: 1.5px solid var(--color-border); margin: var(--sp
   display: flex; align-items: flex-start; justify-content: space-between;
   padding: var(--space-4) var(--space-5) var(--space-3);
   border-bottom: 1.5px solid var(--color-border);
+  cursor: pointer; user-select: none; transition: background .12s;
 }
+.ps-card-header:hover { background: var(--neutral-100); }
+.ps-chevron {
+  font-size: 11px; color: var(--color-text-subtle); margin-left: var(--space-2);
+  transition: transform .2s; flex-shrink: 0; margin-top: 4px;
+}
+.ps-card-header.open .ps-chevron { transform: rotate(180deg); }
 .ps-card-title-block { flex: 1; }
 .ps-card-name {
   font-family: var(--font-headline);
@@ -597,7 +605,8 @@ hr { border: none; border-top: 1.5px solid var(--color-border); margin: var(--sp
   font-family: var(--font-ui); font-size: var(--type-u4);
   color: var(--color-text-subtle); display: flex; gap: var(--space-3);
 }
-.ps-card-body { padding: var(--space-4) var(--space-5); }
+.ps-card-body { padding: var(--space-4) var(--space-5); display: none; }
+.ps-card-body.open { display: block; }
 .ps-section { margin-bottom: var(--space-3); }
 .ps-section:last-child { margin-bottom: 0; }
 .ps-section-label {
@@ -741,6 +750,95 @@ hr { border: none; border-top: 1.5px solid var(--color-border); margin: var(--sp
   border-top: 1.5px solid var(--color-border);
   background: var(--neutral-100);
   display: flex; gap: var(--space-2);
+}
+
+/* ── Overall Project Status table ── */
+.rdoc-status-table { width:100%; border-collapse: collapse; }
+.rdoc-status-table th {
+  font-family: var(--font-headline); font-size: 14px; font-weight: 700;
+  text-align: center; padding: 16px 12px; border: 1.5px solid var(--color-border);
+}
+.rdoc-status-th-green  { background: #e5f5e7; color: #0c6b17; }
+.rdoc-status-th-yellow { background: #fff4e0; color: #a05000; }
+.rdoc-status-th-red    { background: #fce9e9; color: #b52020; }
+
+/* ── Milestone Tracker & Issues tables (shared base) ── */
+.rdoc-milestone-table,
+.rdoc-issues-table { width:100%; border-collapse: collapse; }
+.rdoc-milestone-table th,
+.rdoc-issues-table th {
+  font-family: var(--font-ui); font-size: 9px; font-weight: 800;
+  text-transform: uppercase; letter-spacing: .5px; color: var(--color-text-subtle);
+  background: var(--neutral-100); padding: 8px 12px;
+  border-bottom: 1.5px solid var(--color-border); text-align: left;
+}
+.rdoc-milestone-table td,
+.rdoc-issues-table td {
+  font-family: var(--font-ui); font-size: var(--type-u3);
+  padding: 9px 12px; border-bottom: 1px solid var(--neutral-200); vertical-align: top;
+}
+.rdoc-milestone-table tr:last-child td,
+.rdoc-issues-table tr:last-child td { border-bottom: none; }
+.rdoc-milestone-table tr:hover td,
+.rdoc-issues-table tr:hover td { background: var(--neutral-100); }
+.rdoc-ms-name { font-weight: 700; color: var(--color-text-default); }
+.rdoc-ms-date { color: var(--color-text-subtle); white-space: nowrap; }
+.rdoc-ms-desc { color: var(--color-text-secondary); }
+.ms-badge {
+  display: inline-block; font-size: 10px; font-weight: 700;
+  padding: 2px 8px; border-radius: 99px; white-space: nowrap;
+}
+.ms-badge.upcoming    { background: #dbeeff; color: #0064b0; }
+.ms-badge.not-started { background: var(--neutral-200); color: var(--color-text-subtle); }
+.ms-badge.in-progress { background: #fff4e0; color: #a05000; }
+.ms-badge.complete    { background: #e5f5e7; color: #0c6b17; }
+.ms-badge.delayed     { background: #fce9e9; color: #b52020; }
+.rdoc-priority { font-weight: 700; white-space: nowrap; }
+.rdoc-priority.high   { color: #b52020; }
+.rdoc-priority.medium { color: #a05000; }
+.rdoc-priority.low    { color: var(--color-text-subtle); }
+
+/* ── Gantt task popup ── */
+.gantt-popup {
+  position: fixed; z-index: 300;
+  background: var(--color-bg-default);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: 0 8px 32px rgba(0,0,0,.18);
+  width: 360px; max-width: 92vw;
+  display: none;
+}
+.gantt-popup.open { display: block; }
+.gantt-popup-header {
+  background: var(--brand-primary); color: white;
+  padding: 12px 16px; border-radius: var(--radius-md) var(--radius-md) 0 0;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.gantt-popup-title { font-family: var(--font-headline); font-size: 15px; font-weight: 800; }
+.gantt-popup-close {
+  background: none; border: none; color: rgba(255,255,255,.7); cursor: pointer;
+  font-size: 18px; line-height: 1; padding: 0 2px;
+}
+.gantt-popup-close:hover { color: white; }
+.gantt-popup-body { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; max-height: 60vh; overflow-y: auto; }
+.gantt-popup-section-title {
+  font-family: var(--font-ui); font-size: 9px; font-weight: 800;
+  text-transform: uppercase; letter-spacing: .6px; color: var(--color-text-subtle);
+  border-bottom: 1px solid var(--color-border); padding-bottom: 4px; margin-bottom: 4px;
+}
+.gantt-popup-text {
+  font-family: var(--font-body); font-size: 13px; line-height: 1.6; color: var(--color-text-secondary);
+}
+.gantt-popup-links { display: flex; gap: 6px; flex-wrap: wrap; }
+
+/* ── Bullet list (accomplishments, plan, decisions) ── */
+.rdoc-bullet-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 6px; }
+.rdoc-bullet-list li {
+  font-family: var(--font-body); font-size: 14px; line-height: 1.75;
+  color: var(--color-text-secondary); display: flex; gap: var(--space-2);
+}
+.rdoc-bullet-list li::before {
+  content: '•'; color: var(--brand-accent); font-weight: 900; flex-shrink: 0; margin-top: 1px;
 }
 </style>
 </head>
@@ -991,6 +1089,54 @@ hr { border: none; border-top: 1.5px solid var(--color-border); margin: var(--sp
   </div>
 </div>
 
+<!-- Edit News Item -->
+<div class="modal-backdrop" id="modal-edit-news">
+  <div class="modal">
+    <h3>Edit Update</h3>
+    <input type="hidden" id="edit-news-id" />
+    <div class="form-group">
+      <label>Tag</label>
+      <select id="edit-news-type">
+        <option value="update">Update</option>
+        <option value="milestone">Milestone</option>
+        <option value="risk">Risk</option>
+        <option value="blocker">Blocker</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Headline</label>
+      <input type="text" id="edit-news-headline" />
+    </div>
+    <div class="form-group">
+      <label>Details</label>
+      <textarea id="edit-news-body" rows="4"></textarea>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Author</label>
+        <input type="text" id="edit-news-author" />
+      </div>
+      <div class="form-group">
+        <label>Date</label>
+        <input type="date" id="edit-news-date" />
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn secondary" id="close-edit-news-modal">Cancel</button>
+      <button class="btn" id="save-edit-news">Save Changes</button>
+    </div>
+  </div>
+</div>
+
+<!-- Gantt Task Popup -->
+<div class="gantt-popup" id="gantt-popup">
+  <div class="gantt-popup-header">
+    <span class="gantt-popup-title" id="gantt-popup-title">—</span>
+    <button class="gantt-popup-close" id="gantt-popup-close">✕</button>
+  </div>
+  <div class="gantt-popup-body" id="gantt-popup-body"></div>
+</div>
+
 <!-- Add Wiki Category -->
 <div class="modal-backdrop" id="modal-wiki-cat">
   <div class="modal">
@@ -1073,25 +1219,85 @@ let nextTaskId = load('oxp_next_task_id', 17);
 /* ── REPORTS ── */
 let reports = load('oxp_reports', [
   { id:1, week:12, date:'2026-03-20',
-    wins:'JSON API Roadmap Review meeting held — 3 action items assigned. SSO/Auth options memo drafted by Kate and shared with PJ Hoberman for architectural review. Three OXP auth use cases defined and prototyped: Flexible/Dual Login, Outside OAuth Primary (with 14-Day Outside+ opt-in variant), and Client OAuth Primary / Whitelabel. Legal & compliance review call completed (Mar 25) — key architecture decisions made on PCI/data separation.',
-    wip:'Outside Auth requirements being drafted by Kate for PJ (due Wed/Thu). Shift4 integration planning underway — Tyler coordinating internal sync. Wedbeds integration planning in progress; limitations documented. Tenex drafting architecture and user data flow diagrams (AWS ↔ Azure). JSON API priority list review ongoing with Nich.',
-    upcoming:'Kate to deliver Outside Auth requirements to PJ by Mar 26. Tyler to set up Shift4 internal sync; joint Outside/Tenex review targeting late week of Mar 30. Tenex to share data architecture diagrams. Sarah Lawton to review client contracts re: data definitions. Trish Buyer to engage Risk 360 for compliance best practices.',
-    risks:'Shift4 integration dependency unresolved — blocks Checkout Cart and several P1 items. Wedbeds sign-off not yet obtained; pilot destinations list still needs to be established by Kate. Inntopia children\'s age limitation in bookings (JSON API workaround being explored). Inntopia PCI audit in ~6 weeks — no source code touches permitted.',
+    weekRange: 'March 16–20, 2026',
+    author: 'Kate Davis',
+    summary: 'OXP had a strong first week. Discovery with Alterra is underway, wireframe designs for Packages are in first draft, and a partnership agreement with Tenex has been fully executed. Next week shifts into kickoff & review mode — aligning on wireframes, infrastructure, and API roadmap with Inntopia while integrating Alterra\'s early feedback into planning.',
+    milestones: [
+      { name:'Foundation Infrastructure',     target:'Apr 29, 2026',        status:'upcoming',    desc:'Multi-tenant technical foundation: data models for channel isolation, URL-based routing, dynamic API connectivity per salesId, and frontend branding context system.' },
+      { name:'Brand Customization',           target:'May 13, 2026',        status:'not-started', desc:'Enable partners to fully brand the booking experience so users feel a seamless visual transition from the partner\'s website into the booking flow.' },
+      { name:'Booking Configuration',         target:'May 27, 2026',        status:'not-started', desc:'Empower partners to define booking rules tailored to their business — e.g., restrictions on bookable date ranges or maximum available rooms.' },
+      { name:'Package V1',                    target:'Jun 10, 2026',        status:'not-started', desc:'Enable partners to offer bundled experiences (lodging + lift tickets, lodging + spa) as single bookable products guests can browse, compare, and book.' },
+      { name:'Website Integration',           target:'Jun 24, 2026',        status:'not-started', desc:'Lightweight, brandable date/room picker widget with deep-linking system to drive traffic from partner websites into the OXP booking flow.' },
+      { name:'Launch MVP — Stein Collection', target:'Week of Jul 6, 2026', status:'not-started', desc:'' },
+    ],
+    wins:[
+      'Completed first discovery session with Alterra; received and reviewed their deck with initial feedback',
+      'Paul (Designer) provided rough first-pass wireframe designs for the Packages feature',
+      'Received draft contract from Trevor covering the deal proposal',
+      'Negotiated and signed a partnership contract with Tenex',
+    ],
+    upcoming:[
+      'Tenex officially starts first milestone for Foundational Infrastructure',
+      'Wireframe review session with Inntopia\'s internal team',
+      'OXP infrastructure review with internal Legal and Security teams',
+      'Review the JSON API roadmap with Inntopia Engineering',
+      'Dissect feedback from Alterra deck and define next steps & roadmap',
+    ],
+    green:0, yellow:0, red:0,
+    actions:[
+      { issue:'Deal proposal contract with Alterra',                               priority:'High', owner:'Trevor',              status:'In Progress', resolution:'Awaiting internal review; target close TBD' },
+      { issue:'Review of JSON Priority list to determine target dates & feasibility', priority:'High', owner:'Labs (Kate/PJ/Kcal)', status:'In Progress', resolution:'Meeting set with Heather for next week' },
+    ],
+    decisions:[
+      'Review and provide direction on Trevor\'s deal proposal contract',
+    ],
+  },
+  { id:2, week:13, date:'2026-03-27',
+    weekRange: 'March 23–27, 2026',
+    author: 'Kate Davis',
+    summary: 'Week 13 saw significant progress on auth architecture and compliance. Three OXP auth use cases were defined and prototyped, the JSON API roadmap review completed with 3 action items assigned, and the legal & compliance call on Mar 25 locked in key PCI/data separation decisions. Shift4 integration remains the primary unresolved dependency, blocking Checkout Cart and several P1 items. Next week focuses on delivering auth requirements and resolving the Shift4 path forward.',
+    milestones: [
+      { name:'Foundation Infrastructure',     target:'Apr 29, 2026',        status:'in-progress', desc:'Tenex officially kicked off this milestone. Multi-tenant technical foundation: data models for channel isolation, URL-based routing, dynamic API connectivity per salesId, and frontend branding context system.' },
+      { name:'Brand Customization',           target:'May 13, 2026',        status:'not-started', desc:'Enable partners to fully brand the booking experience so users feel a seamless visual transition from the partner\'s website into the booking flow.' },
+      { name:'Booking Configuration',         target:'May 27, 2026',        status:'not-started', desc:'Empower partners to define booking rules tailored to their business — e.g., restrictions on bookable date ranges or maximum available rooms.' },
+      { name:'Package V1',                    target:'Jun 10, 2026',        status:'not-started', desc:'Enable partners to offer bundled experiences (lodging + lift tickets, lodging + spa) as single bookable products guests can browse, compare, and book.' },
+      { name:'Website Integration',           target:'Jun 24, 2026',        status:'not-started', desc:'Lightweight, brandable date/room picker widget with deep-linking system to drive traffic from partner websites into the OXP booking flow.' },
+      { name:'Launch MVP — Stein Collection', target:'Week of Jul 6, 2026', status:'not-started', desc:'' },
+    ],
+    wins:[
+      'JSON API Roadmap Review meeting held with Inntopia Engineering — 3 action items assigned',
+      'SSO/Auth options memo drafted by Kate and shared with PJ Hoberman for architectural review',
+      'Three OXP auth use cases defined and prototyped: Flexible/Dual Login, Outside OAuth Primary (with 14-Day Outside+ opt-in variant), and Client OAuth Primary / Whitelabel',
+      'Legal & compliance review call completed (Mar 25) — key PCI/data separation decisions made; OXP confirmed as ReactJS on Inntopia JSON API with no source code touches',
+      'Wireframe review session completed with Inntopia\'s internal team',
+      'OXP infrastructure review completed with internal Legal and Security teams',
+    ],
+    upcoming:[
+      'Kate to deliver Outside Auth high-level requirements to PJ Hoberman',
+      'Tyler to set up internal sync with Heather & Patrick on Shift4 considerations; joint Outside/Tenex review targeting late week of Mar 30',
+      'Tenex to share data architecture diagrams (AWS ↔ Azure data flow)',
+      'Sarah Lawton to review client contracts re: breadth of data definitions',
+      'Trish Buyer to engage Risk 360 for compliance best practices on JSON API and OAuth data flows',
+      'Dissect Alterra deck feedback and finalize next steps & roadmap',
+    ],
     green:6, yellow:3, red:2,
     actions:[
-      { owner:'K. Davis',      task:'Draft Outside Auth high-level requirements re: consumer travel & OXP and share with PJ Hoberman', due:'Mar 26' },
-      { owner:'PJ Hoberman',   task:'Propose options for where Outside Auth service should live and implementation approach', due:'TBD' },
-      { owner:'Tyler Santerre',task:'Set up internal sync with Heather & Patrick on Shift4 considerations; lead joint Outside/Tenex review', due:'Mar 30' },
-      { owner:'Nich (Tenex)',  task:'Confirm whether JSON API priority list is still correctly ordered given recent workarounds', due:'TBD' },
-      { owner:'Tenex (Nick A / CJ Hess)', task:'Draft architecture diagrams and user data flow between AWS ↔ Azure', due:'TBD' },
-      { owner:'Sarah Lawton',  task:'Review client contracts re: breadth of data definition sweep', due:'TBD' },
-      { owner:'Trish Buyer',   task:'Engage Risk 360 for best practices on JSON API compliance and OAuth data flows', due:'TBD' },
-      { owner:'Kora Gwartney', task:'Share API best practices doc (token rotation, key sets) with dev team', due:'TBD' },
-      { owner:'K. Davis',      task:'Establish list of pilot destinations/hotels not yet certified for Wedbeds integration', due:'TBD' },
-    ]
+      { issue:'Outside Auth requirements not yet delivered to engineering',              priority:'High',   owner:'K. Davis',                status:'In Progress', resolution:'Draft due Mar 26' },
+      { issue:'Shift4 integration path unresolved — blocks Checkout Cart and P1 items', priority:'High',   owner:'Tyler Santerre',           status:'In Progress', resolution:'Internal sync targeting Mar 30' },
+      { issue:'Deal proposal contract with Alterra still open',                          priority:'High',   owner:'Trevor',                   status:'In Progress', resolution:'Awaiting internal review; target close TBD' },
+      { issue:'JSON API priority list needs re-confirmation given recent workarounds',   priority:'Medium', owner:'Nich (Tenex)',              status:'In Progress', resolution:'TBD' },
+      { issue:'Architecture diagrams (AWS ↔ Azure data flow) not yet drafted',          priority:'Medium', owner:'Tenex (Nick A / CJ Hess)', status:'Not Started', resolution:'TBD' },
+      { issue:'Client contract breadth of data definition sweep not reviewed',           priority:'Medium', owner:'Sarah Lawton',              status:'Not Started', resolution:'TBD' },
+      { issue:'Risk 360 not yet engaged for compliance best practices',                  priority:'Medium', owner:'Trish Buyer',               status:'Not Started', resolution:'TBD' },
+      { issue:'Pilot destinations list for Wedbeds not yet established',                 priority:'Low',    owner:'K. Davis',                 status:'Not Started', resolution:'TBD' },
+    ],
+    decisions:[
+      'Confirm Outside Auth service placement — where should the Outside Auth service live? (PJ Hoberman to propose options)',
+      'Establish pilot destinations list for Wedbeds integration',
+    ],
   },
 ]);
-let nextReportId = load('oxp_next_report_id', 2);
+let nextReportId = load('oxp_next_report_id', 3);
 
 /* ── PROJECT STATUS ── */
 const projectStatuses = [
@@ -1229,18 +1435,22 @@ const projectStatuses = [
 
 /* ── NEWS ── */
 let newsItems = load('oxp_news', [
-  { id:1,  type:'milestone', headline:'Auth Flow Use Cases Defined — 3 Patterns Established', body:'OXP auth architecture is now locked into three use cases: (A) Flexible/Dual Login for mid-market, (B) Outside OAuth Primary with opt-in incentive for large market, and (C) Client OAuth Primary / Whitelabel for enterprise. Prototypes for all variants completed, including a passive enrollment option for Use Case B. Business case: the core tension is that higher-paying clients demand more control, which reduces Outside\'s ability to capture first-party email data.', author:'K. Davis', date:'2026-03-26' },
-  { id:2,  type:'update',    headline:'Compliance & Legal Review Call Complete', body:'Key decisions from the Mar 25 call: OXP is confirmed as ReactJS on Inntopia JSON API with no source code touches (critical ahead of Inntopia\'s PCI audit in ~6 weeks). Data separation model: PII/PCI must live in Azure (Inntopia side); non-sensitive data can live in AWS. Logical separation between client data is sufficient — same table is fine as long as access is controlled. Analytics (Amplitude) must be toggleable off per tenant.', author:'K. Davis', date:'2026-03-25' },
-  { id:3,  type:'risk',      headline:'Shift4 Integration — Dependency Flagged, No Timeline', body:'Shift4 integration is a blocking dependency for the Checkout Cart and several P1 items. Tyler Santerre to set up internal sync with Heather & Patrick to review options; joint Outside/Tenex review targeting late week of Mar 30. No timeline established yet for resolution.', author:'K. Davis', date:'2026-03-25' },
-  { id:4,  type:'risk',      headline:'Wedbeds Integration: Sign-Off Not Yet Obtained', body:'Wedbeds has not yet signed off on the integration. Key limitations documented: each guest requires date of birth & nationality; Inntopia has a children\'s age limitation (potential JSON API workaround being explored); no content sync for descriptions/imagery/room types (availability is real-time only); hotel onboarding is manual — not all 5,000 hotels will be available immediately. Pilot destinations list (uncertified hotels) still needs to be established.', author:'K. Davis', date:'2026-03-25' },
-  { id:5,  type:'update',    headline:'JSON API Roadmap Review — 3 Action Items Assigned', body:'From the JSON API meeting: (1) Outside Auth — Kate to draft high-level requirements re: consumer travel & OXP by Wed/Thu; PJ to follow with proposed options for service architecture. (2) Shift4 — Tyler Santerre to set up internal sync with Heather & Patrick; joint review targeting late next week. (3) JSON API Priority List — Nich to confirm whether current prioritization still holds given recent workarounds.', author:'K. Davis', date:'2026-03-23' },
-  { id:6,  type:'update',    headline:'SSO Architecture Memo Published', body:'Kate published a post-discovery SSO memo covering the three OXP login use cases. Account Linking (Use Case B) identified as future state — not MVP. Open questions for PJ Hoberman: whether Outside Travel consumer product aligns to the Outside OAuth Primary pattern and whether the same API approach applies. Consumer flow confirmed: new users create Outside Account (shadow Inntopia account); existing Outside users sign in with Outside credentials; built via API rather than formal OAuth.', author:'K. Davis', date:'2026-03-24' },
-  { id:7,  type:'milestone', headline:'OXP Gantt Published — Apr–Sep 2026 Roadmap', body:'Project timeline formalized across 4 groups: MVP Features (Foundation Infrastructure through Website Integration, Apr–Jun), P1 Scope (Auth, Shift4, Checkout Cart targeting Jun 30; My Account Jul 15), Ongoing (JSON API HitList), and Client Onboarding (Stein MVP by Jun 15; Alterra initial Jun 30; progressive Waves 2–4 through Sep 22).', author:'K. Davis', date:'2026-03-20' },
+  { id:1,  type:'update', headline:'Auth Flow Use Cases Defined — 3 Patterns Established', body:'OXP auth architecture is now locked into three use cases: (A) Flexible/Dual Login for mid-market, (B) Outside OAuth Primary with opt-in incentive for large market, and (C) Client OAuth Primary / Whitelabel for enterprise. Prototypes for all variants completed, including a passive enrollment option for Use Case B. Business case: the core tension is that higher-paying clients demand more control, which reduces Outside\'s ability to capture first-party email data.', author:'K. Davis', date:'2026-03-26' },
+  { id:2,  type:'update', headline:'Compliance & Legal Review Call Complete', body:'Key decisions from the Mar 25 call: OXP is confirmed as ReactJS on Inntopia JSON API with no source code touches (critical ahead of Inntopia\'s PCI audit in ~6 weeks). Data separation model: PII/PCI must live in Azure (Inntopia side); non-sensitive data can live in AWS. Logical separation between client data is sufficient — same table is fine as long as access is controlled. Analytics (Amplitude) must be toggleable off per tenant.', author:'K. Davis', date:'2026-03-25' },
+  { id:3,  type:'update', headline:'Shift4 Integration — Dependency Flagged, No Timeline', body:'Shift4 integration is a blocking dependency for the Checkout Cart and several P1 items. Tyler Santerre to set up internal sync with Heather & Patrick to review options; joint Outside/Tenex review targeting late week of Mar 30. No timeline established yet for resolution.', author:'K. Davis', date:'2026-03-25' },
+  { id:4,  type:'update', headline:'Wedbeds Integration: Sign-Off Not Yet Obtained', body:'Wedbeds has not yet signed off on the integration. Key limitations documented: each guest requires date of birth & nationality; Inntopia has a children\'s age limitation (potential JSON API workaround being explored); no content sync for descriptions/imagery/room types (availability is real-time only); hotel onboarding is manual — not all 5,000 hotels will be available immediately. Pilot destinations list (uncertified hotels) still needs to be established.', author:'K. Davis', date:'2026-03-25' },
+  { id:5,  type:'update', headline:'JSON API Roadmap Review — 3 Action Items Assigned', body:'From the JSON API meeting: (1) Outside Auth — Kate to draft high-level requirements re: consumer travel & OXP by Wed/Thu; PJ to follow with proposed options for service architecture. (2) Shift4 — Tyler Santerre to set up internal sync with Heather & Patrick; joint review targeting late next week. (3) JSON API Priority List — Nich to confirm whether current prioritization still holds given recent workarounds.', author:'K. Davis', date:'2026-03-23' },
+  { id:6,  type:'update', headline:'SSO Architecture Memo Published', body:'Kate published a post-discovery SSO memo covering the three OXP login use cases. Account Linking (Use Case B) identified as future state — not MVP. Open questions for PJ Hoberman: whether Outside Travel consumer product aligns to the Outside OAuth Primary pattern and whether the same API approach applies. Consumer flow confirmed: new users create Outside Account (shadow Inntopia account); existing Outside users sign in with Outside credentials; built via API rather than formal OAuth.', author:'K. Davis', date:'2026-03-24' },
+  { id:7,  type:'update', headline:'OXP Gantt Published — Apr–Sep 2026 Roadmap', body:'Project timeline formalized across 4 groups: MVP Features (Foundation Infrastructure through Website Integration, Apr–Jun), P1 Scope (Auth, Shift4, Checkout Cart targeting Jun 30; My Account Jul 15), Ongoing (JSON API HitList), and Client Onboarding (Stein MVP by Jun 15; Alterra initial Jun 30; progressive Waves 2–4 through Sep 22).', author:'K. Davis', date:'2026-03-20' },
 ]);
 let nextNewsId = load('oxp_next_news_id', 8);
 
 /* ── WIKI ── */
 let wikiCats = load('oxp_wiki', [
+  { id:0, name:'Project Overview', icon:'🗂️', links:[
+    { id:1,  name:'OXP Overview Deck',  url:'https://docs.google.com/presentation/d/1O0ckDWJMsO52yOK4V5Fw8yMKtHEYNXBTyOe2gEfRV0I/edit?slide=id.g3d2d95e9e7a_0_34', desc:'Project overview presentation — goals, scope, and stakeholder summary' },
+    { id:2,  name:'OXP PRD',            url:'https://drive.google.com/open?id=1-vGd8uucZ4djdSrlgcTCpUJ0UqQ8S-Gkn_aiEHNLIrU', desc:'Product Requirements Document' },
+  ]},
   { id:1, name:'Auth & SSO', icon:'🔐', links:[
     { id:1,  name:'SSO Architecture Memo',           url:'https://docs.google.com/document/d/1EVHoO-HTMFbDS79_fktgXYdfiMper8dDZ2htg1tph9o/edit', desc:'Kate\'s post-discovery write-up of the three OXP login use cases' },
     { id:2,  name:'Auth Options Deck',               url:'https://docs.google.com/presentation/d/16vv2B-MWIGkCG_qfFfZWYZof_oOTnlFOSsuwWyCoU-E/edit?slide=id.g3dc7b618946_0_25', desc:'Slide deck covering auth patterns and implementation options' },
@@ -1335,10 +1545,12 @@ function renderGantt() {
   const todayOffset = daysBetween(tStart, today);
   const todayPx = todayOffset * ppd;
 
-  // Sort & group tasks
+  // Sort & group tasks — explicit group order
+  const GROUP_ORDER = ['MVP Features', 'P1 Scope', 'Ongoing', 'Client Onboarding'];
   const sorted = [...tasks].sort((a, b) => {
-    if (a.group < b.group) return -1;
-    if (a.group > b.group) return 1;
+    const ga = GROUP_ORDER.indexOf(a.group); const gb = GROUP_ORDER.indexOf(b.group);
+    const oa = ga === -1 ? 99 : ga;          const ob = gb === -1 ? 99 : gb;
+    if (oa !== ob) return oa - ob;
     return a.start.localeCompare(b.start);
   });
 
@@ -1398,19 +1610,21 @@ function renderGantt() {
 }
 
 function initDrag() {
-  // Drag bars
+  // Drag bars + click-to-popup
   $$('.gantt-bar').forEach(bar => {
     bar.addEventListener('mousedown', e => {
       if (e.target.dataset.resize) return;
       e.preventDefault();
       const taskId = +bar.dataset.taskId;
       const task = tasks.find(t => t.id === taskId);
-      const startX = e.clientX;
+      const startX = e.clientX; const startY = e.clientY;
       const origLeft = parseInt(bar.style.left);
       bar.classList.add('dragging');
       const ppd = pxPerDay();
+      let moved = false;
 
       const onMove = ev => {
+        if (Math.abs(ev.clientX - startX) > 4 || Math.abs(ev.clientY - startY) > 4) moved = true;
         const dx = ev.clientX - startX;
         const newLeft = Math.max(0, origLeft + dx);
         bar.style.left = newLeft + 'px';
@@ -1422,9 +1636,10 @@ function initDrag() {
         task.start = dateStr(ns); task.end = dateStr(ne);
         bar.title = `${task.name}: ${task.start} → ${task.end}`;
       };
-      const onUp = () => {
+      const onUp = ev => {
         bar.classList.remove('dragging');
-        save('oxp_tasks', tasks);
+        if (!moved) showGanttPopup(taskId, ev.clientX, ev.clientY);
+        else save('oxp_tasks', tasks);
         document.removeEventListener('mousemove', onMove);
         document.removeEventListener('mouseup', onUp);
       };
@@ -1500,34 +1715,108 @@ function renderReports() {
   const list = document.getElementById('report-list');
   if (!reports.length) { list.innerHTML = '<p style="padding:24px;color:var(--color-text-subtle);">No reports yet.</p>'; return; }
   const sorted = [...reports].sort((a, b) => b.week - a.week);
+
+  const msBadge = s => {
+    const map = { 'upcoming':'Upcoming','not-started':'Not Started','in-progress':'In Progress','complete':'Complete','delayed':'Delayed' };
+    return `<span class="ms-badge ${s}">${map[s] || s}</span>`;
+  };
+  const priorityClass = p => (p||'').toLowerCase() === 'high' ? 'high' : (p||'').toLowerCase() === 'medium' ? 'medium' : 'low';
+  const bulletList = arr => Array.isArray(arr)
+    ? `<ul class="rdoc-bullet-list">${arr.map(item => `<li>${item}</li>`).join('')}</ul>`
+    : `<ul class="rdoc-bullet-list"><li>${arr}</li></ul>`;
+
   list.innerHTML = sorted.map(r => {
-    const d = r.date ? parseDate(r.date).toLocaleDateString('en-US', { month:'long', day:'numeric', year:'numeric' }) : '';
-    const actionsHtml = (r.actions && r.actions.length) ? `
+    const weekLabel = r.weekRange || (r.date ? parseDate(r.date).toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'}) : `Week ${r.week}`);
+    const author = r.author || 'K. Davis';
+
+    // Overall status table
+    const statusHtml = `
       <div class="rdoc-section">
-        <div class="rdoc-section-title">📌 Action Items</div>
-        <table class="rdoc-action-table">
-          <thead><tr><th>Owner</th><th>Action</th><th>Due</th></tr></thead>
-          <tbody>${r.actions.map(a => `
+        <div class="rdoc-section-title">Overall Project Status</div>
+        <table class="rdoc-status-table">
+          <tr>
+            <th class="rdoc-status-th-green">✓&nbsp; On Track &nbsp;(${r.green||0})</th>
+            <th class="rdoc-status-th-yellow">⚠&nbsp; At Risk &nbsp;(${r.yellow||0})</th>
+            <th class="rdoc-status-th-red">✗&nbsp; Off Track &nbsp;(${r.red||0})</th>
+          </tr>
+        </table>
+      </div>`;
+
+    // Executive summary
+    const summaryHtml = r.summary ? `
+      <div class="rdoc-section">
+        <div class="rdoc-section-title">Executive Summary</div>
+        <p style="font-family:var(--font-body);font-size:14px;line-height:1.75;color:var(--color-text-secondary);">${r.summary}</p>
+      </div>` : '';
+
+    // Milestone tracker
+    const milestoneHtml = (r.milestones && r.milestones.length) ? `
+      <div class="rdoc-section">
+        <div class="rdoc-section-title">Milestone Tracker</div>
+        <table class="rdoc-milestone-table">
+          <thead><tr><th>Milestone</th><th>Target Date</th><th>Status</th><th>Description</th></tr></thead>
+          <tbody>${r.milestones.map(m => `
             <tr>
-              <td class="ai-owner">${a.owner}</td>
-              <td class="ai-task">${a.task}</td>
-              <td class="ai-due">${a.due}</td>
+              <td class="rdoc-ms-name">${m.name}</td>
+              <td class="rdoc-ms-date">${m.target}</td>
+              <td>${msBadge(m.status)}</td>
+              <td class="rdoc-ms-desc">${m.desc||''}</td>
             </tr>`).join('')}
           </tbody>
         </table>
       </div>` : '';
+
+    // Last week accomplishments
+    const winsHtml = r.wins ? `
+      <div class="rdoc-section">
+        <div class="rdoc-section-title">Last Week — Accomplishments</div>
+        ${bulletList(r.wins)}
+      </div>` : '';
+
+    // This week plan
+    const upcomingHtml = r.upcoming ? `
+      <div class="rdoc-section">
+        <div class="rdoc-section-title">This Week — Plan</div>
+        ${bulletList(r.upcoming)}
+      </div>` : '';
+
+    // Issues, blockers & risks
+    const issuesHtml = (r.actions && r.actions.length) ? `
+      <div class="rdoc-section">
+        <div class="rdoc-section-title">Issues, Blockers &amp; Risks</div>
+        <table class="rdoc-issues-table">
+          <thead><tr><th>Issue / Blocker</th><th>Priority</th><th>Owner</th><th>Status</th><th>Resolution / ETA</th></tr></thead>
+          <tbody>${r.actions.map(a => `
+            <tr>
+              <td style="color:var(--color-text-secondary)">${a.issue || a.task || ''}</td>
+              <td><span class="rdoc-priority ${priorityClass(a.priority)}">${a.priority || '—'}</span></td>
+              <td style="font-weight:700;white-space:nowrap">${a.owner||''}</td>
+              <td style="color:var(--color-text-subtle)">${a.status || a.due || '—'}</td>
+              <td style="color:var(--color-text-subtle)">${a.resolution || a.due || '—'}</td>
+            </tr>`).join('')}
+          </tbody>
+        </table>
+      </div>` : '';
+
+    // Decisions needed
+    const decisionsHtml = (r.decisions && r.decisions.length) ? `
+      <div class="rdoc-section">
+        <div class="rdoc-section-title">Decisions Needed from Leadership</div>
+        ${bulletList(r.decisions)}
+      </div>` : '';
+
     return `
     <div class="report-doc">
       <div class="report-doc-header" onclick="toggleReport(${r.id}, this)">
         <div class="report-doc-meta">
           <span class="report-week-badge">Week ${r.week}</span>
-          <span class="report-date">${d}</span>
+          <span class="report-date">Week of ${weekLabel}</span>
         </div>
         <div style="display:flex;align-items:center;gap:var(--space-4)">
           <div class="rag-grid">
-            <div class="rag-box green"><div class="rag-label">On Track</div><div class="rag-count">${r.green}</div></div>
-            <div class="rag-box yellow"><div class="rag-label">At Risk</div><div class="rag-count">${r.yellow}</div></div>
-            <div class="rag-box red"><div class="rag-label">Delayed</div><div class="rag-count">${r.red}</div></div>
+            <div class="rag-box green"><div class="rag-label">On Track</div><div class="rag-count">${r.green||0}</div></div>
+            <div class="rag-box yellow"><div class="rag-label">At Risk</div><div class="rag-count">${r.yellow||0}</div></div>
+            <div class="rag-box red"><div class="rag-label">Off Track</div><div class="rag-count">${r.red||0}</div></div>
           </div>
           <span class="report-chevron">▼</span>
         </div>
@@ -1535,21 +1824,18 @@ function renderReports() {
       <div class="report-doc-body" id="rb-${r.id}">
         <div class="rdoc-banner">
           <div>
-            <div class="rdoc-banner-title">OXP Project — Weekly Status Report</div>
-            <div class="rdoc-banner-meta">Week ${r.week} &nbsp;·&nbsp; ${d} &nbsp;·&nbsp; Confidential — Internal Use Only</div>
-          </div>
-          <div class="rag-grid" style="gap:var(--space-2)">
-            <div class="rdoc-rag-box green"><div class="rdoc-rag-num">${r.green}</div><div class="rdoc-rag-label">On Track</div></div>
-            <div class="rdoc-rag-box yellow"><div class="rdoc-rag-num">${r.yellow}</div><div class="rdoc-rag-label">At Risk</div></div>
-            <div class="rdoc-rag-box red"><div class="rdoc-rag-num">${r.red}</div><div class="rdoc-rag-label">Delayed</div></div>
+            <div class="rdoc-banner-title">OXP Weekly Status Report</div>
+            <div class="rdoc-banner-meta">Week of ${weekLabel} &nbsp;·&nbsp; Prepared by ${author} &nbsp;·&nbsp; Confidential — Internal Use Only</div>
           </div>
         </div>
         <div class="rdoc-sections">
-          ${r.wins ? `<div class="rdoc-section"><div class="rdoc-section-title">✅ Accomplishments This Week</div><p>${r.wins}</p></div>` : ''}
-          ${r.wip  ? `<div class="rdoc-section"><div class="rdoc-section-title">🔄 In Progress</div><p>${r.wip}</p></div>` : ''}
-          ${r.upcoming ? `<div class="rdoc-section"><div class="rdoc-section-title">🔜 Upcoming Next Week</div><p>${r.upcoming}</p></div>` : ''}
-          ${r.risks ? `<div class="rdoc-section risk-section"><div class="rdoc-section-title">⚠️ Risks & Issues</div><p>${r.risks}</p></div>` : ''}
-          ${actionsHtml}
+          ${statusHtml}
+          ${summaryHtml}
+          ${milestoneHtml}
+          ${winsHtml}
+          ${upcomingHtml}
+          ${issuesHtml}
+          ${decisionsHtml}
         </div>
         <div class="rdoc-footer">
           <button class="btn danger" onclick="deleteReport(${r.id})" style="font-size:12px;padding:6px 12px">🗑 Delete</button>
@@ -1611,7 +1897,7 @@ function renderProjectStatus() {
       ).join('')}</div>` : '';
     return `
     <div class="ps-card">
-      <div class="ps-card-header">
+      <div class="ps-card-header" onclick="togglePsCard(${p.id}, this)">
         <div class="ps-card-title-block">
           <div class="ps-card-name">${p.name}</div>
           <div class="ps-card-meta">
@@ -1619,9 +1905,12 @@ function renderProjectStatus() {
             <span>📅 ${p.timeline}</span>
           </div>
         </div>
-        <span class="status-badge ${p.status}" style="flex-shrink:0;margin-top:2px">${statusLabels[p.status]}</span>
+        <div style="display:flex;align-items:flex-start;gap:var(--space-2)">
+          <span class="status-badge ${p.status}" style="flex-shrink:0;margin-top:2px">${statusLabels[p.status]}</span>
+          <span class="ps-chevron">▼</span>
+        </div>
       </div>
-      <div class="ps-card-body">
+      <div class="ps-card-body" id="psc-${p.id}">
         <div class="ps-section">
           <div class="ps-section-label">Summary</div>
           <div class="ps-section-body">${p.summary}</div>
@@ -1654,7 +1943,8 @@ function renderNews() {
           <span class="news-tag ${item.type}">${typeLabels[item.type] || item.type}</span>
           <span class="news-date">${item.date}</span>
           ${item.author ? `<span class="news-author">· ${item.author}</span>` : ''}
-          <button class="news-delete" onclick="deleteNews(${item.id})">✕</button>
+          <button class="news-edit"   onclick="editNews(${item.id})" title="Edit">✏️</button>
+          <button class="news-delete" onclick="deleteNews(${item.id})" title="Delete">✕</button>
         </div>
         <div class="news-headline">${item.headline}</div>
         ${item.body ? `<div class="news-body">${item.body}</div>` : ''}
@@ -1750,6 +2040,104 @@ $('#save-wiki-cat').addEventListener('click', () => {
 
 // Close modals on backdrop click
 $$('.modal-backdrop').forEach(bd => bd.addEventListener('click', e => { if (e.target === bd) bd.classList.remove('open'); }));
+
+/* ────────────────────────────────────────────────
+   EDIT NEWS ITEM
+──────────────────────────────────────────────── */
+window.editNews = id => {
+  const item = newsItems.find(n => n.id === id);
+  if (!item) return;
+  $('#edit-news-id').value       = id;
+  $('#edit-news-type').value     = item.type || 'update';
+  $('#edit-news-headline').value = item.headline || '';
+  $('#edit-news-body').value     = item.body || '';
+  $('#edit-news-author').value   = item.author || '';
+  $('#edit-news-date').value     = item.date || '';
+  document.getElementById('modal-edit-news').classList.add('open');
+};
+$('#close-edit-news-modal').addEventListener('click', () => document.getElementById('modal-edit-news').classList.remove('open'));
+$('#save-edit-news').addEventListener('click', () => {
+  const id = parseInt($('#edit-news-id').value);
+  const item = newsItems.find(n => n.id === id);
+  if (!item) return;
+  item.type     = $('#edit-news-type').value;
+  item.headline = $('#edit-news-headline').value.trim();
+  item.body     = $('#edit-news-body').value.trim();
+  item.author   = $('#edit-news-author').value.trim();
+  item.date     = $('#edit-news-date').value;
+  save('oxp_news', newsItems);
+  document.getElementById('modal-edit-news').classList.remove('open');
+  renderNews();
+});
+
+/* ────────────────────────────────────────────────
+   PROJECT STATUS CARD TOGGLE
+──────────────────────────────────────────────── */
+window.togglePsCard = (id, header) => {
+  const body = document.getElementById('psc-' + id);
+  const open = body.classList.toggle('open');
+  header.classList.toggle('open', open);
+};
+
+/* ────────────────────────────────────────────────
+   GANTT TASK POPUP
+──────────────────────────────────────────────── */
+function showGanttPopup(taskId, x, y) {
+  const task   = tasks.find(t => t.id === taskId);
+  if (!task) return;
+  // Try to match to projectStatuses by normalising the name
+  const norm  = s => s.toLowerCase().replace(/\s*\(p1\)/,'').replace(/\s*\(.*?\)/,'').trim();
+  const ps    = projectStatuses.find(p => norm(p.name) === norm(task.name));
+  const popup  = document.getElementById('gantt-popup');
+  const title  = document.getElementById('gantt-popup-title');
+  const body   = document.getElementById('gantt-popup-body');
+  const statusLabels = { 'on-track':'On Track','at-risk':'At Risk','delayed':'Delayed','complete':'Complete','not-started':'Not Started' };
+
+  title.textContent = task.name;
+
+  if (ps) {
+    const linksHtml = ps.links && ps.links.length
+      ? `<div><div class="gantt-popup-section-title">Documents</div><div class="gantt-popup-links">${ps.links.map(l=>`<a class="ps-link" href="${l.url}" target="_blank" rel="noopener">📄 ${l.label}</a>`).join('')}</div></div>`
+      : '';
+    const actionsHtml = ps.actions && ps.actions.length
+      ? `<div><div class="gantt-popup-section-title">Open Actions</div>${ps.actions.map(a=>`<div style="font-family:var(--font-ui);font-size:12px;margin-bottom:4px"><strong>${a.owner}</strong> — ${a.task||a.issue}</div>`).join('')}</div>`
+      : '';
+    body.innerHTML = `
+      <div style="display:flex;align-items:center;gap:8px">
+        <span class="status-badge ${ps.status}">${statusLabels[ps.status]||ps.status}</span>
+        <span style="font-family:var(--font-ui);font-size:11px;color:var(--color-text-subtle)">👤 ${ps.owner} &nbsp;·&nbsp; 📅 ${ps.timeline}</span>
+      </div>
+      ${ps.summary ? `<div><div class="gantt-popup-section-title">Summary</div><div class="gantt-popup-text">${ps.summary}</div></div>` : ''}
+      ${ps.risks   ? `<div><div class="gantt-popup-section-title">⚠️ Risks</div><div class="gantt-popup-text" style="color:var(--color-warning)">${ps.risks}</div></div>` : ''}
+      ${ps.blockers? `<div><div class="gantt-popup-section-title">🚧 Blockers</div><div class="gantt-popup-text" style="color:var(--color-danger)">${ps.blockers}</div></div>` : ''}
+      ${actionsHtml}
+      ${linksHtml}`;
+  } else {
+    body.innerHTML = `
+      <div style="display:flex;align-items:center;gap:8px">
+        <span class="status-badge ${task.status}">${statusLabels[task.status]||task.status}</span>
+        <span style="font-family:var(--font-ui);font-size:11px;color:var(--color-text-subtle)">👤 ${task.owner||'—'} &nbsp;·&nbsp; 📅 ${task.start} → ${task.end}</span>
+      </div>
+      <div style="font-family:var(--font-body);font-size:13px;color:var(--color-text-subtle)">No detailed status on file for this task.</div>`;
+  }
+
+  // Position popup near click, keep inside viewport
+  popup.style.display = 'block';
+  popup.classList.add('open');
+  const pw = popup.offsetWidth, ph = popup.offsetHeight;
+  let px = x + 12, py = y + 12;
+  if (px + pw > window.innerWidth  - 12) px = x - pw - 12;
+  if (py + ph > window.innerHeight - 12) py = y - ph - 12;
+  popup.style.left = Math.max(8, px) + 'px';
+  popup.style.top  = Math.max(8, py) + 'px';
+}
+
+document.getElementById('gantt-popup-close').addEventListener('click', () => {
+  document.getElementById('gantt-popup').classList.remove('open');
+});
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') document.getElementById('gantt-popup').classList.remove('open');
+});
 
 /* ────────────────────────────────────────────────
    INIT
