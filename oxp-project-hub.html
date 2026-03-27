@@ -1,0 +1,1764 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>OXP Project Hub</title>
+<!-- Trail Mix Web design system fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Merriweather:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
+
+<style>
+/* ═══════════════════════════════════════════════════════════════
+   TRAIL MIX DESIGN TOKENS — Outside brand / light mode
+   Source: Trail Mix Web + Content Utilities (Figma)
+═══════════════════════════════════════════════════════════════ */
+:root {
+  /* ── Neutral ramp ── */
+  --neutral-100: #f9f9f9;
+  --neutral-200: #f0f0f0;
+  --neutral-300: #e5e5e5;
+  --neutral-400: #c2c2c2;
+  --neutral-500: #737373;
+  --neutral-600: #5a5a5a;
+  --neutral-700: #4e4e4e;
+  --neutral-800: #333333;
+  --neutral-900: #222222;
+
+  /* ── Outside brand ── */
+  --brand-primary:          #000000;
+  --brand-primary-hover:    rgba(0,0,0,0.85);
+  --brand-primary-highlight:rgba(0,0,0,0.05);
+  --brand-accent:           #ffd100;   /* yellow-500 */
+  --brand-accent-light:     #ffe366;   /* yellow-400 */
+
+  /* ── Semantic ── */
+  --color-bg-page:          var(--neutral-100);
+  --color-bg-default:       #ffffff;
+  --color-bg-subtle:        var(--neutral-200);
+  --color-bg-header:        var(--brand-primary);
+  --color-border:           var(--neutral-300);
+  --color-border-strong:    var(--neutral-400);
+  --color-text-default:     var(--neutral-900);
+  --color-text-secondary:   var(--neutral-700);
+  --color-text-subtle:      var(--neutral-500);
+  --color-text-inverted:    #ffffff;
+  --color-shadow:           rgba(0,0,0,0.10);
+
+  /* ── Status ── */
+  --color-success:   #078a14;
+  --color-warning:   #d06000;
+  --color-danger:    #c0392b;
+  --color-info:      #0064b0;
+
+  /* ── Typography — Trail Mix Web ── */
+  --font-headline: 'Plus Jakarta Sans', -apple-system, sans-serif;
+  --font-body:     'Merriweather', Georgia, serif;
+  --font-ui:       'Plus Jakarta Sans', -apple-system, sans-serif;
+
+  /* type/headline */
+  --type-h1-size: 44px;  --type-h1-lh: 120%;  --type-h1-weight: 800;
+  --type-h2-size: 35px;  --type-h2-lh: 120%;  --type-h2-weight: 800;
+  --type-h3-size: 28px;  --type-h3-lh: 130%;  --type-h3-weight: 800;
+  --type-h4-size: 25px;  --type-h4-lh: 125%;  --type-h4-weight: 800;
+  --type-h5-size: 22px;  --type-h5-lh: 135%;  --type-h5-weight: 700;
+  --type-h6-size: 20px;  --type-h6-lh: 140%;  --type-h6-weight: 700;
+  --type-h7-size: 18px;  --type-h7-lh: 145%;  --type-h7-weight: 700;
+  --type-h8-size: 16px;  --type-h8-lh: 145%;  --type-h8-weight: 700;
+
+  /* type/paragraph */
+  --type-para-lg: 18px; --type-para-lg-lh: 180%;
+  --type-para-md: 16px; --type-para-md-lh: 170%;
+  --type-para-sm: 14px; --type-para-sm-lh: 165%;
+
+  /* type/ui (u1–u4) */
+  --type-u1: 16px; --type-u1-lh: 24px;
+  --type-u2: 14px; --type-u2-lh: 20px;
+  --type-u3: 12px; --type-u3-lh: 18px;
+  --type-u4: 10px; --type-u4-lh: 16px;
+
+  /* type/button */
+  --type-btn-lg: 18px; --type-btn-md: 16px;
+  --type-btn-sm: 14px; --type-btn-xs: 12px;
+
+  /* spacing */
+  --space-1: 4px;  --space-2: 8px;  --space-3: 12px;
+  --space-4: 16px; --space-5: 20px; --space-6: 24px;
+  --space-8: 32px; --space-10: 40px;
+  --radius-sm: 4px; --radius-md: 8px; --radius-lg: 12px;
+}
+
+/* ─── Reset ─── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: var(--font-ui);
+  background: var(--color-bg-page);
+  color: var(--color-text-default);
+  font-size: var(--type-u2);
+  line-height: var(--type-u2-lh);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   HEADER  — Outside black
+═══════════════════════════════════════════════════════════════ */
+.site-header {
+  background: var(--color-bg-header);
+  color: var(--color-text-inverted);
+  padding: 0 var(--space-8);
+  display: flex; align-items: center; justify-content: space-between;
+  height: 60px; position: sticky; top: 0; z-index: 100;
+}
+.site-header .logo {
+  display: flex; align-items: center; gap: var(--space-3);
+}
+.site-header .badge {
+  background: var(--brand-accent);
+  color: var(--brand-primary);
+  font-family: var(--font-headline);
+  font-size: var(--type-u3); font-weight: 800;
+  letter-spacing: 1px; padding: 4px 10px;
+  border-radius: var(--radius-sm);
+  text-transform: uppercase;
+}
+.site-header h1 {
+  font-family: var(--font-headline);
+  font-size: var(--type-h8-size);
+  font-weight: var(--type-h8-weight);
+  line-height: var(--type-h8-lh);
+  letter-spacing: -0.2px;
+}
+.header-meta {
+  font-family: var(--font-ui);
+  font-size: var(--type-u4); font-weight: 500;
+  color: rgba(255,255,255,0.55);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   NAV TABS
+═══════════════════════════════════════════════════════════════ */
+.nav-tabs {
+  background: var(--color-bg-default);
+  border-bottom: 1.5px solid var(--color-border);
+  display: flex; padding: 0 var(--space-8);
+  position: sticky; top: 60px; z-index: 99;
+  box-shadow: 0 1px 0 var(--color-shadow);
+}
+.nav-tab {
+  padding: 14px var(--space-5);
+  cursor: pointer; border: none; background: none;
+  font-family: var(--font-ui);
+  font-size: var(--type-u3); font-weight: 700;
+  color: var(--color-text-subtle);
+  border-bottom: 3px solid transparent;
+  transition: color .15s, border-color .15s;
+  display: flex; align-items: center; gap: var(--space-2);
+  letter-spacing: .1px;
+}
+.nav-tab:hover { color: var(--color-text-default); }
+.nav-tab.active {
+  color: var(--brand-primary);
+  border-bottom-color: var(--brand-primary);
+}
+.nav-tab .icon { font-size: 15px; }
+
+/* ═══════════════════════════════════════════════════════════════
+   SECTIONS
+═══════════════════════════════════════════════════════════════ */
+.section { display: none; padding: var(--space-6) var(--space-8); max-width: 1440px; margin: 0 auto; }
+.section.active { display: block; }
+
+/* ─── Section header ─── */
+.section-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: var(--space-5);
+}
+.section-title {
+  font-family: var(--font-headline);
+  font-size: var(--type-h7-size);
+  font-weight: var(--type-h7-weight);
+  line-height: var(--type-h7-lh);
+  color: var(--color-text-default);
+}
+
+/* ─── Buttons — Trail Mix button/md ─── */
+.btn {
+  background: var(--brand-primary);
+  color: var(--color-text-inverted);
+  border: none; border-radius: var(--radius-sm);
+  padding: 9px var(--space-4);
+  font-family: var(--font-ui);
+  font-size: var(--type-btn-sm); font-weight: 700;
+  cursor: pointer;
+  display: inline-flex; align-items: center; gap: 6px;
+  transition: opacity .15s;
+  letter-spacing: .1px;
+}
+.btn:hover { opacity: .82; }
+.btn.secondary {
+  background: transparent;
+  color: var(--color-text-default);
+  border: 1.5px solid var(--color-border-strong);
+}
+.btn.secondary:hover { background: var(--brand-primary-highlight); }
+.btn.danger { background: var(--color-danger); }
+.btn-group { display: flex; gap: var(--space-2); }
+
+/* ─── Card ─── */
+.card {
+  background: var(--color-bg-default);
+  border-radius: var(--radius-md);
+  border: 1.5px solid var(--color-border);
+  box-shadow: 0 1px 3px var(--color-shadow);
+}
+
+/* ─── Status badges ─── */
+.status-badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 3px 9px; border-radius: 20px;
+  font-family: var(--font-ui);
+  font-size: var(--type-u4); font-weight: 700;
+  letter-spacing: .2px;
+}
+.status-badge.on-track    { background: #e5f5e7; color: #0c6b17; }
+.status-badge.at-risk     { background: #fff4e0; color: #9a4200; }
+.status-badge.delayed     { background: #fce9e9; color: var(--color-danger); }
+.status-badge.complete    { background: var(--neutral-200); color: var(--neutral-800); }
+.status-badge.not-started { background: var(--neutral-200); color: var(--color-text-subtle); }
+
+/* ═══════════════════════════════════════════════════════════════
+   GANTT CHART
+═══════════════════════════════════════════════════════════════ */
+.gantt-wrap {
+  overflow-x: auto;
+  border-radius: var(--radius-md);
+  border: 1.5px solid var(--color-border);
+  background: var(--color-bg-default);
+}
+.gantt-table { border-collapse: collapse; width: 100%; }
+.gantt-table th {
+  background: var(--neutral-100);
+  color: var(--color-text-subtle);
+  font-family: var(--font-ui);
+  font-size: var(--type-u4); font-weight: 700;
+  text-transform: uppercase; letter-spacing: .6px;
+  padding: 10px var(--space-3);
+  border-bottom: 1.5px solid var(--color-border);
+  white-space: nowrap;
+}
+.gantt-table td {
+  padding: 8px var(--space-3);
+  border-bottom: 1px solid var(--neutral-200);
+  vertical-align: middle;
+  font-family: var(--font-ui);
+  font-size: var(--type-u2);
+}
+.gantt-table tr:last-child td { border-bottom: none; }
+.gantt-table tr:hover td { background: var(--neutral-100); }
+.gantt-table tr.group-row td {
+  padding: 10px var(--space-3) 4px;
+  font-size: var(--type-u4); font-weight: 800;
+  text-transform: uppercase; letter-spacing: .7px;
+  color: var(--color-text-subtle);
+  background: #fafafa;
+}
+
+.gantt-label-col    { min-width: 180px; max-width: 220px; }
+.gantt-owner-col    { min-width: 110px; }
+.gantt-status-col   { min-width: 100px; }
+.gantt-timeline-col { min-width: 600px; position: relative; }
+
+/* Timeline month headers */
+.timeline-header {
+  display: flex; height: 34px;
+  border-bottom: 1.5px solid var(--color-border);
+}
+.timeline-month {
+  flex: none; display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-ui);
+  font-size: var(--type-u4); font-weight: 700;
+  text-transform: uppercase; letter-spacing: .5px;
+  color: var(--color-text-subtle);
+  background: var(--neutral-100);
+  border-right: 1px solid var(--color-border);
+}
+
+/* Gantt bars */
+.gantt-bar-cell { position: relative; height: 36px; }
+.gantt-bar {
+  position: absolute; height: 20px; top: 8px;
+  border-radius: var(--radius-sm);
+  cursor: grab; display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-ui);
+  font-size: var(--type-u4); font-weight: 700;
+  color: white; overflow: hidden; white-space: nowrap;
+  user-select: none; transition: box-shadow .15s;
+  box-shadow: 0 1px 3px rgba(0,0,0,.18);
+}
+.gantt-bar:hover { box-shadow: 0 2px 8px rgba(0,0,0,.28); }
+.gantt-bar.dragging { cursor: grabbing; box-shadow: 0 4px 16px rgba(0,0,0,.32); opacity: .9; }
+.gantt-bar .resize-handle {
+  position: absolute; right: 0; top: 0; bottom: 0; width: 8px;
+  cursor: ew-resize; background: rgba(0,0,0,.18);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
+.gantt-actions button {
+  background: none; border: none; cursor: pointer;
+  padding: 3px 5px; border-radius: var(--radius-sm);
+  color: var(--color-text-subtle); font-size: 14px;
+}
+.gantt-actions button:hover { background: var(--neutral-200); color: var(--color-danger); }
+
+/* ═══════════════════════════════════════════════════════════════
+   STATUS REPORTS
+═══════════════════════════════════════════════════════════════ */
+.report-list { display: flex; flex-direction: column; gap: var(--space-3); }
+.report-card {
+  background: var(--color-bg-default);
+  border-radius: var(--radius-md);
+  border: 1.5px solid var(--color-border);
+  box-shadow: 0 1px 3px var(--color-shadow);
+  overflow: hidden;
+}
+.report-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px var(--space-5); cursor: pointer; user-select: none;
+  transition: background .12s;
+}
+.report-header:hover { background: var(--neutral-100); }
+.report-header-left { display: flex; align-items: center; gap: var(--space-3); }
+.report-week-badge {
+  background: var(--brand-primary); color: var(--brand-accent);
+  font-family: var(--font-ui); font-size: var(--type-u4);
+  font-weight: 800; letter-spacing: .8px;
+  text-transform: uppercase;
+  padding: 4px 10px; border-radius: var(--radius-sm);
+}
+.report-date {
+  font-family: var(--font-ui);
+  font-size: var(--type-u3); font-weight: 500;
+  color: var(--color-text-subtle);
+}
+.report-chevron { font-size: 11px; color: var(--color-text-subtle); transition: transform .18s; }
+.report-header.open .report-chevron { transform: rotate(180deg); }
+.report-body { display: none; padding: 0 var(--space-5) var(--space-5); border-top: 1.5px solid var(--neutral-200); }
+.report-body.open { display: block; }
+.report-section { margin-top: var(--space-4); }
+.report-section h4 {
+  font-family: var(--font-ui);
+  font-size: var(--type-u4); font-weight: 800;
+  text-transform: uppercase; letter-spacing: .6px;
+  color: var(--color-text-subtle); margin-bottom: var(--space-2);
+}
+.report-section p, .report-section li {
+  font-family: var(--font-body);
+  font-size: var(--type-para-sm); line-height: var(--type-para-sm-lh);
+  color: var(--color-text-secondary);
+}
+.report-section ul { padding-left: 18px; }
+.report-section li { margin-bottom: 3px; }
+
+.rag-grid { display: grid; grid-template-columns: repeat(3, 82px); gap: var(--space-2); }
+.rag-box { border-radius: var(--radius-sm); padding: 8px 12px; border-left: 3px solid; }
+.rag-box.green  { background: #e5f5e7; border-color: var(--color-success); }
+.rag-box.yellow { background: #fff4e0; border-color: var(--color-warning); }
+.rag-box.red    { background: #fce9e9; border-color: var(--color-danger); }
+.rag-label {
+  font-family: var(--font-ui); font-size: 9px; font-weight: 800;
+  text-transform: uppercase; letter-spacing: .5px; opacity: .7; margin-bottom: 2px;
+}
+.rag-count { font-family: var(--font-headline); font-size: 20px; font-weight: 800; line-height: 1; }
+.rag-box.green  .rag-count { color: #0c6b17; }
+.rag-box.yellow .rag-count { color: var(--color-warning); }
+.rag-box.red    .rag-count { color: var(--color-danger); }
+
+/* ═══════════════════════════════════════════════════════════════
+   NEWS FEED
+═══════════════════════════════════════════════════════════════ */
+.news-layout {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: var(--space-6); align-items: start;
+}
+@media (max-width: 900px) { .news-layout { grid-template-columns: 1fr; } }
+
+.news-feed { display: flex; flex-direction: column; }
+.news-item {
+  display: flex; gap: var(--space-4);
+  padding: var(--space-4) 0;
+  border-bottom: 1px solid var(--neutral-200);
+  align-items: flex-start;
+}
+.news-item:last-child { border-bottom: none; }
+
+.news-dot-col { display: flex; flex-direction: column; align-items: center; padding-top: 3px; }
+.news-dot {
+  width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0;
+  border: 2px solid var(--color-bg-default);
+  box-shadow: 0 0 0 2px currentColor;
+}
+.news-dot.update    { color: var(--neutral-700);      background: var(--neutral-700); }
+.news-dot.milestone { color: var(--color-success);    background: var(--color-success); }
+.news-dot.risk      { color: var(--color-warning);    background: var(--color-warning); }
+.news-dot.blocker   { color: var(--color-danger);     background: var(--color-danger); }
+.news-line { width: 1.5px; flex: 1; background: var(--neutral-300); margin-top: 4px; min-height: 16px; }
+
+.news-content { flex: 1; }
+.news-meta { display: flex; align-items: center; gap: var(--space-2); margin-bottom: 3px; flex-wrap: wrap; }
+.news-tag {
+  font-family: var(--font-ui); font-size: 9px; font-weight: 800;
+  text-transform: uppercase; letter-spacing: .5px;
+  padding: 2px 7px; border-radius: 2px;
+}
+.news-tag.update    { background: var(--neutral-200); color: var(--neutral-700); }
+.news-tag.milestone { background: #e5f5e7; color: #0c6b17; }
+.news-tag.risk      { background: #fff4e0; color: var(--color-warning); }
+.news-tag.blocker   { background: #fce9e9; color: var(--color-danger); }
+
+.news-date, .news-author {
+  font-family: var(--font-ui); font-size: var(--type-u4); color: var(--color-text-subtle);
+}
+.news-headline {
+  font-family: var(--font-ui); font-size: var(--type-u1);
+  font-weight: 700; color: var(--color-text-default); margin-bottom: 3px;
+}
+.news-body {
+  font-family: var(--font-body); font-size: var(--type-para-sm);
+  line-height: var(--type-para-sm-lh); color: var(--color-text-secondary);
+}
+.news-delete {
+  background: none; border: none; cursor: pointer;
+  color: var(--color-border-strong); font-size: 12px;
+  padding: 2px 4px; border-radius: 3px; line-height: 1;
+}
+.news-delete:hover { color: var(--color-danger); background: #fce9e9; }
+
+/* Add panel */
+.news-add-panel {
+  background: var(--color-bg-default);
+  border-radius: var(--radius-md);
+  border: 1.5px solid var(--color-border);
+  padding: var(--space-5);
+  box-shadow: 0 1px 3px var(--color-shadow);
+  position: sticky; top: 120px;
+}
+.news-add-panel h3 {
+  font-family: var(--font-headline);
+  font-size: var(--type-h8-size); font-weight: var(--type-h8-weight);
+  line-height: var(--type-h8-lh);
+  margin-bottom: var(--space-4);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   WIKI
+═══════════════════════════════════════════════════════════════ */
+.wiki-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+  gap: var(--space-4);
+}
+.wiki-category {
+  background: var(--color-bg-default);
+  border-radius: var(--radius-md);
+  border: 1.5px solid var(--color-border);
+  box-shadow: 0 1px 3px var(--color-shadow);
+  overflow: hidden;
+}
+.wiki-cat-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: var(--space-3) var(--space-4);
+  background: var(--neutral-100);
+  border-bottom: 1.5px solid var(--color-border);
+}
+.wiki-cat-title {
+  display: flex; align-items: center; gap: var(--space-2);
+  font-family: var(--font-ui);
+  font-size: var(--type-u3); font-weight: 800;
+  text-transform: uppercase; letter-spacing: .5px;
+  color: var(--color-text-default);
+}
+.wiki-cat-icon { font-size: 15px; }
+.wiki-cat-actions { display: flex; gap: 4px; }
+.wiki-cat-actions button {
+  background: none; border: none; cursor: pointer;
+  font-size: 16px; line-height: 1; padding: 2px 5px;
+  border-radius: var(--radius-sm); color: var(--color-text-subtle);
+}
+.wiki-cat-actions button:hover { background: var(--neutral-200); }
+.wiki-links { padding: var(--space-2) 0; }
+.wiki-link-item {
+  display: flex; align-items: flex-start; gap: var(--space-2);
+  padding: 8px var(--space-4); transition: background .12s; position: relative;
+}
+.wiki-link-item:hover { background: var(--neutral-100); }
+.wiki-link-item a {
+  flex: 1; text-decoration: none; color: var(--color-text-default);
+  font-family: var(--font-ui); font-size: var(--type-u2); font-weight: 600;
+  display: flex; align-items: flex-start; gap: var(--space-2);
+}
+.wiki-link-item a:hover { color: var(--brand-primary); text-decoration: underline; }
+.wiki-doc-icon { font-size: 13px; opacity: .6; margin-top: 1px; flex-shrink: 0; }
+.wiki-link-info .wiki-link-desc {
+  font-family: var(--font-ui); font-size: var(--type-u4);
+  color: var(--color-text-subtle); margin-top: 1px;
+}
+.del-wiki {
+  display: none; background: none; border: none; cursor: pointer;
+  color: var(--color-danger); font-size: 11px; padding: 2px 4px; flex-shrink: 0;
+}
+.wiki-link-item:hover .del-wiki { display: block; }
+.empty-wiki {
+  padding: var(--space-4);
+  font-family: var(--font-ui); font-size: var(--type-u3);
+  color: var(--color-text-subtle); font-style: italic;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   FORMS & MODALS
+═══════════════════════════════════════════════════════════════ */
+.modal-backdrop {
+  display: none; position: fixed; inset: 0;
+  background: rgba(0,0,0,.45); z-index: 1000;
+  align-items: center; justify-content: center;
+}
+.modal-backdrop.open { display: flex; }
+.modal {
+  background: var(--color-bg-default);
+  border-radius: var(--radius-lg); padding: var(--space-6);
+  width: 480px; max-width: 95vw;
+  box-shadow: 0 24px 64px rgba(0,0,0,.25);
+}
+.modal h3 {
+  font-family: var(--font-headline);
+  font-size: var(--type-h7-size); font-weight: var(--type-h7-weight);
+  line-height: var(--type-h7-lh);
+  margin-bottom: var(--space-5);
+}
+
+.form-group { margin-bottom: var(--space-3); }
+.form-group label {
+  display: block;
+  font-family: var(--font-ui); font-size: var(--type-u4); font-weight: 700;
+  text-transform: uppercase; letter-spacing: .4px;
+  color: var(--color-text-subtle); margin-bottom: 5px;
+}
+.form-group input, .form-group select, .form-group textarea {
+  width: 100%;
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-sm); padding: 8px var(--space-3);
+  font-family: var(--font-ui); font-size: var(--type-u2);
+  color: var(--color-text-default); background: var(--color-bg-default);
+}
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+  outline: none; border-color: var(--brand-primary);
+  box-shadow: 0 0 0 3px var(--brand-primary-highlight);
+}
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-3); }
+.modal-footer { display: flex; justify-content: flex-end; gap: var(--space-2); margin-top: var(--space-5); }
+
+input[type=color] {
+  width: 40px; height: 36px;
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-sm); cursor: pointer; padding: 2px;
+}
+
+/* ─── Divider ─── */
+hr { border: none; border-top: 1.5px solid var(--color-border); margin: var(--space-4) 0; }
+
+/* ═══════════════════════════════════════════════════════════════
+   PROJECT STATUS CARDS
+═══════════════════════════════════════════════════════════════ */
+.ps-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: var(--space-4);
+}
+.ps-card {
+  background: var(--color-bg-default);
+  border-radius: var(--radius-md);
+  border: 1.5px solid var(--color-border);
+  box-shadow: 0 1px 3px var(--color-shadow);
+  overflow: hidden;
+}
+.ps-card-header {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  padding: var(--space-4) var(--space-5) var(--space-3);
+  border-bottom: 1.5px solid var(--color-border);
+}
+.ps-card-title-block { flex: 1; }
+.ps-card-name {
+  font-family: var(--font-headline);
+  font-size: var(--type-h8-size); font-weight: var(--type-h8-weight);
+  line-height: var(--type-h8-lh); color: var(--color-text-default);
+  margin-bottom: 3px;
+}
+.ps-card-meta {
+  font-family: var(--font-ui); font-size: var(--type-u4);
+  color: var(--color-text-subtle); display: flex; gap: var(--space-3);
+}
+.ps-card-body { padding: var(--space-4) var(--space-5); }
+.ps-section { margin-bottom: var(--space-3); }
+.ps-section:last-child { margin-bottom: 0; }
+.ps-section-label {
+  font-family: var(--font-ui); font-size: 9px; font-weight: 800;
+  text-transform: uppercase; letter-spacing: .6px; color: var(--color-text-subtle);
+  margin-bottom: 4px;
+}
+.ps-section-body {
+  font-family: var(--font-body); font-size: 13px; line-height: 1.65;
+  color: var(--color-text-secondary);
+}
+.ps-section-body.risk { color: var(--color-warning); }
+.ps-section-body.blocker { color: var(--color-danger); }
+.ps-actions { display: flex; flex-direction: column; gap: 5px; }
+.ps-action-item {
+  display: flex; align-items: baseline; gap: var(--space-2);
+  font-family: var(--font-ui); font-size: var(--type-u3);
+}
+.ps-action-owner {
+  flex-shrink: 0; font-weight: 700; color: var(--color-text-default);
+  min-width: 90px;
+}
+.ps-action-desc { color: var(--color-text-secondary); }
+.ps-tag {
+  display: inline-flex; align-items: center;
+  font-family: var(--font-ui); font-size: 9px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .4px;
+  padding: 2px 7px; border-radius: 2px; margin-left: 4px;
+}
+.ps-tag.dep { background: #e8edf7; color: #1a4a8a; }
+.ps-card-footer {
+  padding: var(--space-3) var(--space-5);
+  border-top: 1px solid var(--neutral-200);
+  display: flex; gap: var(--space-2); flex-wrap: wrap;
+}
+.ps-link {
+  font-family: var(--font-ui); font-size: var(--type-u4); font-weight: 600;
+  color: var(--color-text-default); text-decoration: none;
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 3px 8px; border-radius: 3px; background: var(--neutral-100);
+  border: 1px solid var(--color-border);
+}
+.ps-link:hover { background: var(--neutral-200); }
+
+/* ═══════════════════════════════════════════════════════════════
+   PROGRAM STATUS — Doc-style report format
+═══════════════════════════════════════════════════════════════ */
+.report-doc {
+  background: var(--color-bg-default);
+  border-radius: var(--radius-md);
+  border: 1.5px solid var(--color-border);
+  box-shadow: 0 1px 3px var(--color-shadow);
+  overflow: hidden;
+  margin-bottom: var(--space-3);
+}
+.report-doc-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px var(--space-5); cursor: pointer; user-select: none;
+  transition: background .12s;
+}
+.report-doc-header:hover { background: var(--neutral-100); }
+.report-doc-header.open { border-bottom: 1.5px solid var(--color-border); }
+.report-doc-meta { display: flex; align-items: center; gap: var(--space-3); }
+.report-doc-body { display: none; }
+.report-doc-body.open { display: block; }
+
+/* Doc sections */
+.rdoc-banner {
+  background: var(--brand-primary); color: white;
+  padding: var(--space-4) var(--space-5);
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: var(--space-4);
+}
+.rdoc-banner-title {
+  font-family: var(--font-headline); font-size: var(--type-h7-size);
+  font-weight: 800; line-height: 1.2;
+}
+.rdoc-banner-meta {
+  font-family: var(--font-ui); font-size: var(--type-u3); opacity: .7;
+  margin-top: 2px;
+}
+.rdoc-rag-row {
+  display: flex; gap: var(--space-3); padding: var(--space-4) var(--space-5);
+  border-bottom: 1.5px solid var(--color-border); background: var(--neutral-100);
+  flex-wrap: wrap;
+}
+.rdoc-rag-box {
+  display: flex; align-items: center; gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-sm); border-left: 3px solid;
+  flex: 1; min-width: 100px;
+}
+.rdoc-rag-box.green  { background: #e5f5e7; border-color: var(--color-success); }
+.rdoc-rag-box.yellow { background: #fff4e0; border-color: var(--color-warning); }
+.rdoc-rag-box.red    { background: #fce9e9; border-color: var(--color-danger); }
+.rdoc-rag-num {
+  font-family: var(--font-headline); font-size: 22px; font-weight: 800; line-height: 1;
+}
+.rdoc-rag-box.green  .rdoc-rag-num { color: #0c6b17; }
+.rdoc-rag-box.yellow .rdoc-rag-num { color: var(--color-warning); }
+.rdoc-rag-box.red    .rdoc-rag-num { color: var(--color-danger); }
+.rdoc-rag-label {
+  font-family: var(--font-ui); font-size: var(--type-u4); font-weight: 700;
+  text-transform: uppercase; letter-spacing: .4px; opacity: .7;
+}
+
+.rdoc-sections { padding: var(--space-5); display: flex; flex-direction: column; gap: var(--space-5); }
+.rdoc-section {}
+.rdoc-section-title {
+  font-family: var(--font-ui); font-size: var(--type-u3); font-weight: 800;
+  text-transform: uppercase; letter-spacing: .6px; color: var(--color-text-subtle);
+  border-bottom: 1.5px solid var(--color-border); padding-bottom: var(--space-2);
+  margin-bottom: var(--space-3); display: flex; align-items: center; gap: var(--space-2);
+}
+.rdoc-section p {
+  font-family: var(--font-body); font-size: 14px; line-height: 1.75;
+  color: var(--color-text-secondary);
+}
+.rdoc-section.risk-section p { color: var(--color-warning); }
+
+/* Action items table */
+.rdoc-action-table { width: 100%; border-collapse: collapse; }
+.rdoc-action-table th {
+  font-family: var(--font-ui); font-size: 9px; font-weight: 800;
+  text-transform: uppercase; letter-spacing: .5px; color: var(--color-text-subtle);
+  background: var(--neutral-100); padding: 8px 12px;
+  border-bottom: 1.5px solid var(--color-border); text-align: left;
+}
+.rdoc-action-table td {
+  font-family: var(--font-ui); font-size: var(--type-u3);
+  padding: 9px 12px; border-bottom: 1px solid var(--neutral-200);
+  vertical-align: top;
+}
+.rdoc-action-table tr:last-child td { border-bottom: none; }
+.rdoc-action-table tr:hover td { background: var(--neutral-100); }
+.ai-owner { font-weight: 700; color: var(--color-text-default); white-space: nowrap; }
+.ai-task { color: var(--color-text-secondary); }
+.ai-due { color: var(--color-text-subtle); white-space: nowrap; font-size: var(--type-u4); }
+.rdoc-footer {
+  padding: var(--space-3) var(--space-5);
+  border-top: 1.5px solid var(--color-border);
+  background: var(--neutral-100);
+  display: flex; gap: var(--space-2);
+}
+</style>
+</head>
+<body>
+
+<!-- ═══ HEADER ═══ -->
+<header class="site-header">
+  <div class="logo">
+    <span class="badge">OXP</span>
+    <h1>Project Hub</h1>
+  </div>
+  <div class="header-meta">Last updated: <span id="last-updated"></span></div>
+</header>
+
+<!-- ═══ NAV ═══ -->
+<nav class="nav-tabs">
+  <button class="nav-tab active" data-tab="news">
+    <span class="icon">📣</span> News Feed
+  </button>
+  <button class="nav-tab" data-tab="status">
+    <span class="icon">📋</span> Program Status
+  </button>
+  <button class="nav-tab" data-tab="project-status">
+    <span class="icon">🟢</span> Project Status
+  </button>
+  <button class="nav-tab" data-tab="gantt">
+    <span class="icon">📅</span> Timeline
+  </button>
+  <button class="nav-tab" data-tab="wiki">
+    <span class="icon">📚</span> Wiki
+  </button>
+</nav>
+
+<!-- ═══════════════════════════════════════
+     TAB 1 — NEWS FEED (now first/default)
+═══════════════════════════════════════ -->
+<section class="section active" id="tab-news">
+  <div class="section-header">
+    <span class="section-title">Project Updates</span>
+  </div>
+  <div class="news-layout">
+    <div class="card" style="padding: var(--space-5);">
+      <div class="news-feed" id="news-feed"></div>
+    </div>
+    <div class="news-add-panel">
+      <h3>Post an Update</h3>
+      <div class="form-group">
+        <label>Headline</label>
+        <input type="text" id="news-headline" placeholder="Brief summary…" />
+      </div>
+      <div class="form-group">
+        <label>Detail</label>
+        <textarea id="news-detail" rows="3" placeholder="More context (optional)"></textarea>
+      </div>
+      <div class="form-group">
+        <label>Type</label>
+        <select id="news-type">
+          <option value="update">Update</option>
+          <option value="milestone">Milestone</option>
+          <option value="risk">Risk</option>
+          <option value="blocker">Blocker</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Author</label>
+        <input type="text" id="news-author" placeholder="Your name" />
+      </div>
+      <button class="btn" style="width:100%;justify-content:center;" id="post-news">Post Update</button>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     TAB 2 — TIMELINE
+═══════════════════════════════════════ -->
+<section class="section" id="tab-gantt">
+  <div class="section-header">
+    <span class="section-title">Project Timeline</span>
+    <div class="btn-group">
+      <button class="btn secondary" id="gantt-zoom-out">− Zoom Out</button>
+      <button class="btn secondary" id="gantt-zoom-in">+ Zoom In</button>
+      <button class="btn" id="open-add-task">＋ Add Task</button>
+    </div>
+  </div>
+  <div id="gantt-container"></div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     TAB 3 — PROJECT STATUS
+═══════════════════════════════════════ -->
+<section class="section" id="tab-project-status">
+  <div class="section-header">
+    <span class="section-title">Project Status</span>
+    <span style="font-family:var(--font-ui);font-size:var(--type-u3);color:var(--color-text-subtle);">Pulled from active notes · Updated Mar 26, 2026</span>
+  </div>
+  <div class="ps-grid" id="ps-grid"></div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     TAB 4 — PROGRAM STATUS
+═══════════════════════════════════════ -->
+<section class="section" id="tab-status">
+  <div class="section-header">
+    <span class="section-title">Program Status</span>
+    <button class="btn" id="open-add-report">＋ Add Report</button>
+  </div>
+  <div class="report-list" id="report-list"></div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     TAB 5 — WIKI
+═══════════════════════════════════════ -->
+<section class="section" id="tab-wiki">
+  <div class="section-header">
+    <span class="section-title">Project Wiki & Documents</span>
+    <button class="btn" id="open-add-category">＋ Add Category</button>
+  </div>
+  <div class="wiki-grid" id="wiki-grid"></div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     MODALS
+═══════════════════════════════════════ -->
+
+<!-- Add Task -->
+<div class="modal-backdrop" id="modal-task">
+  <div class="modal">
+    <h3>Add Timeline Task</h3>
+    <div class="form-group">
+      <label>Task Name</label>
+      <input type="text" id="task-name" placeholder="e.g. Discovery Phase" />
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Start Date</label>
+        <input type="date" id="task-start" />
+      </div>
+      <div class="form-group">
+        <label>End Date</label>
+        <input type="date" id="task-end" />
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Owner</label>
+        <input type="text" id="task-owner" placeholder="Name or team" />
+      </div>
+      <div class="form-group">
+        <label>Status</label>
+        <select id="task-status">
+          <option value="not-started">Not Started</option>
+          <option value="on-track">On Track</option>
+          <option value="at-risk">At Risk</option>
+          <option value="delayed">Delayed</option>
+          <option value="complete">Complete</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Bar Color</label>
+        <input type="color" id="task-color" value="#000000" />
+      </div>
+      <div class="form-group">
+        <label>Group / Phase</label>
+        <input type="text" id="task-group" placeholder="e.g. Phase 1" />
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn secondary" id="close-task-modal">Cancel</button>
+      <button class="btn" id="save-task">Save Task</button>
+    </div>
+  </div>
+</div>
+
+<!-- Add Report -->
+<div class="modal-backdrop" id="modal-report">
+  <div class="modal">
+    <h3>Add Status Report</h3>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Week Number</label>
+        <input type="number" id="rpt-week" placeholder="e.g. 14" min="1" />
+      </div>
+      <div class="form-group">
+        <label>Report Date</label>
+        <input type="date" id="rpt-date" />
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Accomplishments</label>
+      <textarea id="rpt-wins" rows="3" placeholder="What was completed this week?"></textarea>
+    </div>
+    <div class="form-group">
+      <label>In Progress</label>
+      <textarea id="rpt-wip" rows="2" placeholder="What is actively being worked on?"></textarea>
+    </div>
+    <div class="form-group">
+      <label>Upcoming</label>
+      <textarea id="rpt-upcoming" rows="2" placeholder="What's planned for next week?"></textarea>
+    </div>
+    <div class="form-group">
+      <label>Risks / Issues</label>
+      <textarea id="rpt-risks" rows="2" placeholder="Any blockers or concerns?"></textarea>
+    </div>
+    <div class="form-row" style="grid-template-columns:1fr 1fr 1fr">
+      <div class="form-group">
+        <label>On Track</label>
+        <input type="number" id="rpt-green" value="0" min="0" />
+      </div>
+      <div class="form-group">
+        <label>At Risk</label>
+        <input type="number" id="rpt-yellow" value="0" min="0" />
+      </div>
+      <div class="form-group">
+        <label>Delayed</label>
+        <input type="number" id="rpt-red" value="0" min="0" />
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn secondary" id="close-report-modal">Cancel</button>
+      <button class="btn" id="save-report">Save Report</button>
+    </div>
+  </div>
+</div>
+
+<!-- Add Wiki Link -->
+<div class="modal-backdrop" id="modal-wiki-link">
+  <div class="modal">
+    <h3>Add Document Link</h3>
+    <input type="hidden" id="wiki-cat-id" />
+    <div class="form-group">
+      <label>Document Name</label>
+      <input type="text" id="wiki-link-name" placeholder="e.g. Project Charter" />
+    </div>
+    <div class="form-group">
+      <label>URL</label>
+      <input type="text" id="wiki-link-url" placeholder="https://…" />
+    </div>
+    <div class="form-group">
+      <label>Description (optional)</label>
+      <input type="text" id="wiki-link-desc" placeholder="Brief description" />
+    </div>
+    <div class="modal-footer">
+      <button class="btn secondary" id="close-wiki-link-modal">Cancel</button>
+      <button class="btn" id="save-wiki-link">Add Link</button>
+    </div>
+  </div>
+</div>
+
+<!-- Add Wiki Category -->
+<div class="modal-backdrop" id="modal-wiki-cat">
+  <div class="modal">
+    <h3>Add Wiki Category</h3>
+    <div class="form-group">
+      <label>Category Name</label>
+      <input type="text" id="wiki-cat-name" placeholder="e.g. Technical Specs" />
+    </div>
+    <div class="form-group">
+      <label>Icon (emoji)</label>
+      <input type="text" id="wiki-cat-icon" placeholder="e.g. 🔧" maxlength="4" />
+    </div>
+    <div class="modal-footer">
+      <button class="btn secondary" id="close-wiki-cat-modal">Cancel</button>
+      <button class="btn" id="save-wiki-cat">Add Category</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ────────────────────────────────────────────────
+   UTILITIES
+──────────────────────────────────────────────── */
+const $ = (sel, ctx=document) => ctx.querySelector(sel);
+const $$ = (sel, ctx=document) => [...ctx.querySelectorAll(sel)];
+const dateStr = d => d.toISOString().split('T')[0];
+const parseDate = s => new Date(s + 'T00:00:00');
+const today = new Date();
+
+document.getElementById('last-updated').textContent =
+  today.toLocaleDateString('en-US', { month:'long', day:'numeric', year:'numeric' });
+
+/* ────────────────────────────────────────────────
+   STATE  (localStorage-backed)
+──────────────────────────────────────────────── */
+function load(key, def) {
+  try { const v = localStorage.getItem(key); return v ? JSON.parse(v) : def; } catch { return def; }
+}
+function save(key, val) { try { localStorage.setItem(key, JSON.stringify(val)); } catch {} }
+
+/* ── Trail Mix brand color palette per brand ── */
+const BRAND_COLORS = {
+  outside:      '#000000',
+  backpacker:   '#27403b',
+  trailrunner:  '#004443',
+  climbing:     '#a40000',
+  ski:          '#125488',
+  nationalpark: '#106b8d',
+  run:          '#4b66f7',
+  pinkbike:     '#d80404',
+  yogajournal:  '#5b3fa8',
+  warrenmiller: '#122733',
+};
+
+/* ── GANTT ── */
+let tasks = load('oxp_tasks', [
+  // MVP Features
+  { id:1,  name:'Foundation Infrastructure', start:'2026-04-06', end:'2026-04-17', owner:'Engineering',    status:'not-started', color:BRAND_COLORS.outside,     group:'MVP Features' },
+  { id:2,  name:'Brand Customization',       start:'2026-04-06', end:'2026-04-17', owner:'Design',         status:'not-started', color:BRAND_COLORS.outside,     group:'MVP Features' },
+  { id:3,  name:'Booking Config',            start:'2026-04-20', end:'2026-05-01', owner:'Engineering',    status:'not-started', color:BRAND_COLORS.outside,     group:'MVP Features' },
+  { id:4,  name:'Packages V1',               start:'2026-05-04', end:'2026-05-15', owner:'Engineering',    status:'not-started', color:BRAND_COLORS.outside,     group:'MVP Features' },
+  { id:5,  name:'Website Integration',       start:'2026-05-18', end:'2026-06-01', owner:'Engineering',    status:'not-started', color:BRAND_COLORS.outside,     group:'MVP Features' },
+  // P1 Scope
+  { id:6,  name:'OXP Auth Solution',          start:'2026-04-06', end:'2026-06-30', owner:'K. Davis / PJ',  status:'at-risk',     color:BRAND_COLORS.ski,         group:'P1 Scope' },
+  { id:7,  name:'Shift4 Native Checkout',    start:'2026-04-20', end:'2026-06-30', owner:'Tyler Santerre', status:'at-risk',     color:BRAND_COLORS.ski,         group:'P1 Scope' },
+  { id:8,  name:'Advanced Checkout Cart',    start:'2026-05-04', end:'2026-06-30', owner:'Engineering',    status:'not-started', color:BRAND_COLORS.ski,         group:'P1 Scope' },
+  { id:9,  name:'My Account',                start:'2026-07-01', end:'2026-07-15', owner:'Engineering',    status:'not-started', color:BRAND_COLORS.ski,         group:'P1 Scope' },
+  { id:10, name:'Small P1 Items',            start:'2026-07-01', end:'2026-07-15', owner:'Engineering',    status:'not-started', color:BRAND_COLORS.ski,         group:'P1 Scope' },
+  // Ongoing
+  { id:11, name:'JSON API HitList',          start:'2026-04-06', end:'2026-09-30', owner:'Nich / Team',    status:'on-track',    color:BRAND_COLORS.trailrunner, group:'Ongoing' },
+  // Client Onboarding
+  { id:12, name:'Stein — MVP Client',        start:'2026-06-01', end:'2026-06-15', owner:'K. Davis',       status:'not-started', color:BRAND_COLORS.nationalpark,group:'Client Onboarding' },
+  { id:13, name:'Alterra — Single (non centralized)', start:'2026-06-15', end:'2026-06-30', owner:'K. Davis', status:'not-started', color:'#1a7a4a', group:'Client Onboarding' },
+  { id:14, name:'Alterra — Wave 2',          start:'2026-06-30', end:'2026-07-27', owner:'K. Davis',       status:'not-started', color:'#2e9e62',                group:'Client Onboarding' },
+  { id:15, name:'Alterra — Wave 3',          start:'2026-07-27', end:'2026-08-24', owner:'K. Davis',       status:'not-started', color:'#43bf7a',                group:'Client Onboarding' },
+  { id:16, name:'Alterra — Wave 4',          start:'2026-08-24', end:'2026-09-22', owner:'K. Davis',       status:'not-started', color:'#5cd48f',                group:'Client Onboarding' },
+]);
+let nextTaskId = load('oxp_next_task_id', 17);
+
+/* ── REPORTS ── */
+let reports = load('oxp_reports', [
+  { id:1, week:12, date:'2026-03-20',
+    wins:'JSON API Roadmap Review meeting held — 3 action items assigned. SSO/Auth options memo drafted by Kate and shared with PJ Hoberman for architectural review. Three OXP auth use cases defined and prototyped: Flexible/Dual Login, Outside OAuth Primary (with 14-Day Outside+ opt-in variant), and Client OAuth Primary / Whitelabel. Legal & compliance review call completed (Mar 25) — key architecture decisions made on PCI/data separation.',
+    wip:'Outside Auth requirements being drafted by Kate for PJ (due Wed/Thu). Shift4 integration planning underway — Tyler coordinating internal sync. Wedbeds integration planning in progress; limitations documented. Tenex drafting architecture and user data flow diagrams (AWS ↔ Azure). JSON API priority list review ongoing with Nich.',
+    upcoming:'Kate to deliver Outside Auth requirements to PJ by Mar 26. Tyler to set up Shift4 internal sync; joint Outside/Tenex review targeting late week of Mar 30. Tenex to share data architecture diagrams. Sarah Lawton to review client contracts re: data definitions. Trish Buyer to engage Risk 360 for compliance best practices.',
+    risks:'Shift4 integration dependency unresolved — blocks Checkout Cart and several P1 items. Wedbeds sign-off not yet obtained; pilot destinations list still needs to be established by Kate. Inntopia children\'s age limitation in bookings (JSON API workaround being explored). Inntopia PCI audit in ~6 weeks — no source code touches permitted.',
+    green:6, yellow:3, red:2,
+    actions:[
+      { owner:'K. Davis',      task:'Draft Outside Auth high-level requirements re: consumer travel & OXP and share with PJ Hoberman', due:'Mar 26' },
+      { owner:'PJ Hoberman',   task:'Propose options for where Outside Auth service should live and implementation approach', due:'TBD' },
+      { owner:'Tyler Santerre',task:'Set up internal sync with Heather & Patrick on Shift4 considerations; lead joint Outside/Tenex review', due:'Mar 30' },
+      { owner:'Nich (Tenex)',  task:'Confirm whether JSON API priority list is still correctly ordered given recent workarounds', due:'TBD' },
+      { owner:'Tenex (Nick A / CJ Hess)', task:'Draft architecture diagrams and user data flow between AWS ↔ Azure', due:'TBD' },
+      { owner:'Sarah Lawton',  task:'Review client contracts re: breadth of data definition sweep', due:'TBD' },
+      { owner:'Trish Buyer',   task:'Engage Risk 360 for best practices on JSON API compliance and OAuth data flows', due:'TBD' },
+      { owner:'Kora Gwartney', task:'Share API best practices doc (token rotation, key sets) with dev team', due:'TBD' },
+      { owner:'K. Davis',      task:'Establish list of pilot destinations/hotels not yet certified for Wedbeds integration', due:'TBD' },
+    ]
+  },
+]);
+let nextReportId = load('oxp_next_report_id', 2);
+
+/* ── PROJECT STATUS ── */
+const projectStatuses = [
+  {
+    id: 1,
+    name: 'MVP Features',
+    status: 'not-started',
+    owner: 'Engineering / Design',
+    timeline: 'Apr 6 – Jun 1, 2026',
+    summary: 'Core platform work covering Foundation Infrastructure, Brand Customization, Booking Config, Packages V1, and Website Integration. All items are sequential across April through June. No blockers identified yet — work begins April 6.',
+    risks: null,
+    blockers: null,
+    actions: [],
+    links: [],
+  },
+  {
+    id: 2,
+    name: 'OXP Auth Solution (P1)',
+    status: 'at-risk',
+    owner: 'K. Davis / PJ Hoberman',
+    timeline: 'Apr 6 – Jun 30, 2026',
+    summary: 'Multi-tenant auth platform supporting 3 use cases: (A) Flexible/Dual Login — mid-market, (B) Outside OAuth Primary with optional opt-in incentive (14-Day Outside+ Adventure Pass) — large market, (C) Client OAuth/Whitelabel — enterprise. Three prototypes completed. Account Linking is future state, not MVP. Consumer flow confirmed: new users create Outside Account (shadow Inntopia account); existing Outside users sign in with Outside credentials; built via API not formal OAuth.',
+    risks: 'Architecture decision pending — Kate drafting requirements for PJ to propose service placement and implementation options. Open question: whether Outside Travel consumer product aligns to the Outside OAuth Primary pattern.',
+    blockers: null,
+    actions: [
+      { owner: 'K. Davis', task: 'Draft high-level auth requirements re: consumer travel & OXP', due: 'Mar 26' },
+      { owner: 'PJ Hoberman', task: 'Propose options for service placement and implementation', due: 'TBD' },
+    ],
+    links: [
+      { label: 'SSO Memo', url: 'https://docs.google.com/document/d/1EVHoO-HTMFbDS79_fktgXYdfiMper8dDZ2htg1tph9o/edit' },
+      { label: 'Auth Deck', url: 'https://docs.google.com/presentation/d/16vv2B-MWIGkCG_qfFfZWYZof_oOTnlFOSsuwWyCoU-E/edit?slide=id.g3dc7b618946_0_25' },
+    ],
+  },
+  {
+    id: 3,
+    name: 'Shift4 Native Checkout (P1)',
+    status: 'at-risk',
+    owner: 'Tyler Santerre',
+    timeline: 'Apr 20 – Jun 30, 2026',
+    summary: 'Payment processing integration with Shift4. Required for Checkout Cart and several other P1 items — this is a blocking dependency. Tyler Santerre leading; internal sync with Heather & Patrick being scheduled, followed by joint Outside/Tenex review.',
+    risks: null,
+    blockers: 'No timeline established yet. Checkout Cart cannot begin until Shift4 path is resolved.',
+    actions: [
+      { owner: 'Tyler Santerre', task: 'Set up internal sync with Heather & Patrick on considerations/options', due: 'Mar 28' },
+      { owner: 'Tyler Santerre', task: 'Lead joint Outside/Tenex review of Shift4 options', due: 'Mar 30' },
+    ],
+    links: [],
+  },
+  {
+    id: 4,
+    name: 'Advanced Checkout Cart (P1)',
+    status: 'not-started',
+    owner: 'Engineering',
+    timeline: 'May 4 – Jun 30, 2026',
+    summary: 'Full checkout cart experience. Cannot begin until Shift4 integration path is resolved. Blocked.',
+    risks: null,
+    blockers: 'Blocked by Shift4 Integration decision.',
+    actions: [],
+    links: [],
+  },
+  {
+    id: 5,
+    name: 'JSON API HitList',
+    status: 'on-track',
+    owner: 'Nich / Tenex',
+    timeline: 'Apr 6 – Sep 30, 2026 (ongoing)',
+    summary: 'Ongoing prioritized list of JSON API work items running the length of the project. Current focus: validating that the existing prioritization still reflects the team\'s needs given recent workarounds that have been built.',
+    risks: 'Prioritization may be stale — some workarounds already built may have shifted what needs to be in the API.',
+    blockers: null,
+    actions: [
+      { owner: 'Nich', task: 'Confirm whether JSON API priority list is still correctly ordered given recent workarounds', due: 'TBD' },
+    ],
+    links: [],
+  },
+  {
+    id: 6,
+    name: 'Wedbeds Integration',
+    status: 'at-risk',
+    owner: 'K. Davis',
+    timeline: 'Not yet scheduled',
+    summary: 'Integration with Wedbeds (hotel inventory). Key limitations documented: each guest requires date of birth & nationality; Inntopia has a children\'s age limitation (potential JSON API workaround); no content sync — descriptions, imagery, and room types will NOT sync, only availability is real-time; hotel onboarding is manual, so all 5,000 hotels will not be available immediately.',
+    risks: 'Wedbeds has not yet signed off on the integration. Pilot destinations/hotels list (uncertified) has not been established. Dependency on Shift4 integration.',
+    blockers: 'Wedbeds sign-off required before integration can proceed.',
+    actions: [
+      { owner: 'K. Davis', task: 'Establish list of pilot destinations/hotels not yet Wedbeds certified', due: 'TBD' },
+    ],
+    links: [
+      { label: 'Wedbeds Doc', url: 'https://docs.google.com/document/d/1OR-dhaeHMHluwW8aOUBBfg1kS8Qnuno9U81GwGwJ6yY/edit' },
+    ],
+  },
+  {
+    id: 7,
+    name: 'Client Onboarding — Stein',
+    status: 'not-started',
+    owner: 'K. Davis',
+    timeline: 'Jun 1 – Jun 15, 2026',
+    summary: 'Stein is the MVP client target. Goal is to have them live by June 15. Onboarding is contingent on MVP Features and Auth being complete.',
+    risks: 'Timeline is tight — MVP Features and Auth must both land cleanly by early June.',
+    blockers: null,
+    actions: [],
+    links: [],
+  },
+  {
+    id: 8,
+    name: 'Client Onboarding — Alterra',
+    status: 'not-started',
+    owner: 'K. Davis',
+    timeline: 'Jun 15 – Sep 22, 2026 (progressive waves)',
+    summary: 'Alterra onboarding is progressive: Initial client (non-native, non-centralized checkout) targets Jun 30. Wave 2 (Jul 27) → Wave 3 (Aug 24) → Wave 4 (Sep 22). Cadence is deliberately slow to manage onboarding quality.',
+    risks: null,
+    blockers: 'Dependent on Alterra initial being live before subsequent waves begin.',
+    actions: [],
+    links: [],
+  },
+  {
+    id: 9,
+    name: 'Compliance & Legal',
+    status: 'on-track',
+    owner: 'K. Davis / Tenex / Sarah Lawton',
+    timeline: 'Ongoing',
+    summary: 'Mar 25 review call completed. Key decisions: OXP is ReactJS on Inntopia JSON API — no source code touches (critical ahead of Inntopia PCI audit in ~6 weeks). PII/PCI must live in Azure; non-sensitive data can live in AWS. Logical client data separation is sufficient. All payment data must be fully tokenized. Amplitude must be toggleable off per tenant for older Inntopia contracts.',
+    risks: 'Inntopia PCI audit in approximately 6 weeks. All development must ensure no source code touches.',
+    blockers: null,
+    actions: [
+      { owner: 'Tenex (Nick A / CJ)', task: 'Draft architecture diagrams and user data flow between AWS ↔ Azure', due: 'TBD' },
+      { owner: 'Sarah Lawton', task: 'Review client contracts re: breadth of data definition sweep', due: 'TBD' },
+      { owner: 'Trish Buyer', task: 'Engage Risk 360 for JSON API compliance and OAuth best practices', due: 'TBD' },
+      { owner: 'Kora Gwartney', task: 'Share API best practices doc (token rotation, key sets) with dev team', due: 'TBD' },
+    ],
+    links: [
+      { label: 'Compliance Notes', url: 'https://docs.google.com/document/d/1RWSwHsUSN9sMTU5I28f_5mkcfuNXJ9neAXY7QbpFy5Y/edit?tab=t.kda6ajb5lqzh' },
+    ],
+  },
+];
+
+/* ── NEWS ── */
+let newsItems = load('oxp_news', [
+  { id:1,  type:'milestone', headline:'Auth Flow Use Cases Defined — 3 Patterns Established', body:'OXP auth architecture is now locked into three use cases: (A) Flexible/Dual Login for mid-market, (B) Outside OAuth Primary with opt-in incentive for large market, and (C) Client OAuth Primary / Whitelabel for enterprise. Prototypes for all variants completed, including a passive enrollment option for Use Case B. Business case: the core tension is that higher-paying clients demand more control, which reduces Outside\'s ability to capture first-party email data.', author:'K. Davis', date:'2026-03-26' },
+  { id:2,  type:'update',    headline:'Compliance & Legal Review Call Complete', body:'Key decisions from the Mar 25 call: OXP is confirmed as ReactJS on Inntopia JSON API with no source code touches (critical ahead of Inntopia\'s PCI audit in ~6 weeks). Data separation model: PII/PCI must live in Azure (Inntopia side); non-sensitive data can live in AWS. Logical separation between client data is sufficient — same table is fine as long as access is controlled. Analytics (Amplitude) must be toggleable off per tenant.', author:'K. Davis', date:'2026-03-25' },
+  { id:3,  type:'risk',      headline:'Shift4 Integration — Dependency Flagged, No Timeline', body:'Shift4 integration is a blocking dependency for the Checkout Cart and several P1 items. Tyler Santerre to set up internal sync with Heather & Patrick to review options; joint Outside/Tenex review targeting late week of Mar 30. No timeline established yet for resolution.', author:'K. Davis', date:'2026-03-25' },
+  { id:4,  type:'risk',      headline:'Wedbeds Integration: Sign-Off Not Yet Obtained', body:'Wedbeds has not yet signed off on the integration. Key limitations documented: each guest requires date of birth & nationality; Inntopia has a children\'s age limitation (potential JSON API workaround being explored); no content sync for descriptions/imagery/room types (availability is real-time only); hotel onboarding is manual — not all 5,000 hotels will be available immediately. Pilot destinations list (uncertified hotels) still needs to be established.', author:'K. Davis', date:'2026-03-25' },
+  { id:5,  type:'update',    headline:'JSON API Roadmap Review — 3 Action Items Assigned', body:'From the JSON API meeting: (1) Outside Auth — Kate to draft high-level requirements re: consumer travel & OXP by Wed/Thu; PJ to follow with proposed options for service architecture. (2) Shift4 — Tyler Santerre to set up internal sync with Heather & Patrick; joint review targeting late next week. (3) JSON API Priority List — Nich to confirm whether current prioritization still holds given recent workarounds.', author:'K. Davis', date:'2026-03-23' },
+  { id:6,  type:'update',    headline:'SSO Architecture Memo Published', body:'Kate published a post-discovery SSO memo covering the three OXP login use cases. Account Linking (Use Case B) identified as future state — not MVP. Open questions for PJ Hoberman: whether Outside Travel consumer product aligns to the Outside OAuth Primary pattern and whether the same API approach applies. Consumer flow confirmed: new users create Outside Account (shadow Inntopia account); existing Outside users sign in with Outside credentials; built via API rather than formal OAuth.', author:'K. Davis', date:'2026-03-24' },
+  { id:7,  type:'milestone', headline:'OXP Gantt Published — Apr–Sep 2026 Roadmap', body:'Project timeline formalized across 4 groups: MVP Features (Foundation Infrastructure through Website Integration, Apr–Jun), P1 Scope (Auth, Shift4, Checkout Cart targeting Jun 30; My Account Jul 15), Ongoing (JSON API HitList), and Client Onboarding (Stein MVP by Jun 15; Alterra initial Jun 30; progressive Waves 2–4 through Sep 22).', author:'K. Davis', date:'2026-03-20' },
+]);
+let nextNewsId = load('oxp_next_news_id', 8);
+
+/* ── WIKI ── */
+let wikiCats = load('oxp_wiki', [
+  { id:1, name:'Auth & SSO', icon:'🔐', links:[
+    { id:1,  name:'SSO Architecture Memo',           url:'https://docs.google.com/document/d/1EVHoO-HTMFbDS79_fktgXYdfiMper8dDZ2htg1tph9o/edit', desc:'Kate\'s post-discovery write-up of the three OXP login use cases' },
+    { id:2,  name:'Auth Options Deck',               url:'https://docs.google.com/presentation/d/16vv2B-MWIGkCG_qfFfZWYZof_oOTnlFOSsuwWyCoU-E/edit?slide=id.g3dc7b618946_0_25', desc:'Slide deck covering auth patterns and implementation options' },
+    { id:3,  name:'Auth Flow Prototype — All Use Cases', url:'#', desc:'Interactive HTML prototype: Use Cases A, B, B-Expanded, B-Passive, C, Outside Travel' },
+    { id:4,  name:'Use Case B — Expanded (Opt-In)',   url:'#', desc:'14-Day Outside+ Adventure Pass incentive variant' },
+    { id:5,  name:'Use Case B — Passive Enrollment',  url:'#', desc:'Legal disclosure / implied consent variant' },
+  ]},
+  { id:2, name:'Technical & Architecture', icon:'🔧', links:[
+    { id:1,  name:'Compliance & Legal Review Notes', url:'https://docs.google.com/document/d/1RWSwHsUSN9sMTU5I28f_5mkcfuNXJ9neAXY7QbpFy5Y/edit?tab=t.kda6ajb5lqzh', desc:'Mar 25 call — PCI/data separation decisions; action items for Tenex, Sarah, Trish, Kora' },
+    { id:2,  name:'Technical Architecture Doc',      url:'#', desc:'System design: ReactJS on Inntopia JSON API; AWS/Azure data split' },
+    { id:3,  name:'JSON API HitList',                url:'#', desc:'Prioritized list of JSON API work items — review with Nich' },
+    { id:4,  name:'Route Search PRD',                url:'#', desc:'Product brief: Route Search for Trip Builder (uploaded PDF)' },
+    { id:5,  name:'Route Search Wireframe',          url:'#', desc:'Interactive 6-screen prototype: Trip Builder → Route search → Add to itinerary' },
+  ]},
+  { id:3, name:'Integrations', icon:'🔌', links:[
+    { id:1,  name:'Wedbeds Integration Doc',         url:'https://docs.google.com/document/d/1OR-dhaeHMHluwW8aOUBBfg1kS8Qnuno9U81GwGwJ6yY/edit', desc:'Dependencies, limitations, and requirements for Wedbeds integration' },
+    { id:2,  name:'Wedbeds Dependencies Brief',      url:'#', desc:'Boss-ready doc: Shift4 dependency, guest data requirements, onboarding model' },
+    { id:3,  name:'Shift4 Integration Notes',        url:'#', desc:'Considerations and options — Tyler Santerre leading internal review' },
+  ]},
+  { id:4, name:'Design & UX', icon:'🎨', links:[
+    { id:1,  name:'Trail Mix Web — Design System',   url:'https://www.figma.com/design/RmYj7a1B3e8DB7ommTk8BN/Trail-Mix--Web?m=auto&node-id=9557-229', desc:'General components (Figma)' },
+    { id:2,  name:'Content Utilities — Tokens',      url:'https://www.figma.com/design/NB8xV3Np9gn8m20b4JX14w/Content-Utilities?node-id=3080-9902', desc:'Color tokens, type styles, multi-brand appearances (Figma)' },
+    { id:3,  name:'OXP Auth Flows Deck',             url:'#', desc:'PPTX deck with all 4 login screen designs' },
+    { id:4,  name:'Outside Trips Usability Improvements', url:'#', desc:'Running list of product improvements from usability test sessions' },
+  ]},
+  { id:5, name:'Project Management', icon:'📁', links:[
+    { id:1,  name:'OXP Gantt Chart (PPTX)',          url:'#', desc:'Apr–Sep 2026 timeline: MVP Features, P1 Scope, JSON API, Client Onboarding' },
+    { id:2,  name:'OXP Status Report — Week 12',     url:'#', desc:'Mar 20, 2026 — Auth, Shift4, Compliance, Wedbeds updates' },
+    { id:3,  name:'OXP Weekly Status Template',      url:'#', desc:'Reusable Word doc template for weekly reports' },
+    { id:4,  name:'Decision Log',                    url:'#', desc:'Key decisions and rationale — see Compliance Notes for Mar 25 decisions' },
+  ]},
+]);
+let nextWikiCatId  = load('oxp_next_wiki_cat',  6);
+let nextWikiLinkId = load('oxp_next_wiki_link', 20);
+
+/* ────────────────────────────────────────────────
+   NAV TABS
+──────────────────────────────────────────────── */
+$$('.nav-tab').forEach(tab => tab.addEventListener('click', () => {
+  $$('.nav-tab').forEach(t => t.classList.remove('active'));
+  $$('.section').forEach(s => s.classList.remove('active'));
+  tab.classList.add('active');
+  document.getElementById('tab-' + tab.dataset.tab).classList.add('active');
+}));
+
+/* ────────────────────────────────────────────────
+   GANTT
+──────────────────────────────────────────────── */
+let ganttZoom = 1.0;
+const BASE_PPD = 8; // pixels per day base
+
+function pxPerDay() { return BASE_PPD * ganttZoom; }
+
+function timelineBounds() {
+  const starts = tasks.map(t => parseDate(t.start));
+  const ends   = tasks.map(t => parseDate(t.end));
+  let min = new Date(Math.min(...starts));
+  let max = new Date(Math.max(...ends));
+  min.setDate(min.getDate() - 7);
+  max.setDate(max.getDate() + 14);
+  return { min, max };
+}
+
+function daysBetween(a, b) { return Math.round((b - a) / 86400000); }
+
+function renderGantt() {
+  const container = document.getElementById('gantt-container');
+  if (!tasks.length) {
+    container.innerHTML = '<p style="padding:24px;color:var(--color-text-subtle);">No tasks yet. Click "Add Task" to get started.</p>';
+    return;
+  }
+
+  const { min: tStart, max: tEnd } = timelineBounds();
+  const totalDays  = daysBetween(tStart, tEnd);
+  const ppd        = pxPerDay();
+  const totalWidth = totalDays * ppd;
+
+  // Month headers
+  let monthHtml = '';
+  let cur = new Date(tStart); cur.setDate(1);
+  while (cur <= tEnd) {
+    const mStart = new Date(Math.max(cur, tStart));
+    const nextM  = new Date(cur.getFullYear(), cur.getMonth() + 1, 1);
+    const mEnd   = new Date(Math.min(nextM, tEnd));
+    const w = daysBetween(mStart, mEnd) * ppd;
+    const label = cur.toLocaleDateString('en-US', { month:'short', year:'2-digit' });
+    monthHtml += `<div class="timeline-month" style="width:${w}px">${label}</div>`;
+    cur = nextM;
+  }
+
+  // Today marker offset
+  const todayOffset = daysBetween(tStart, today);
+  const todayPx = todayOffset * ppd;
+
+  // Sort & group tasks
+  const sorted = [...tasks].sort((a, b) => {
+    if (a.group < b.group) return -1;
+    if (a.group > b.group) return 1;
+    return a.start.localeCompare(b.start);
+  });
+
+  let rows = '';
+  let lastGroup = null;
+  const statusLabels = { 'on-track':'On Track','at-risk':'At Risk','delayed':'Delayed','complete':'Complete','not-started':'Not Started' };
+
+  sorted.forEach(task => {
+    if (task.group && task.group !== lastGroup) {
+      rows += `<tr class="group-row"><td colspan="4">${task.group}</td><td style="background:#fafafa;"></td></tr>`;
+      lastGroup = task.group;
+    }
+    const offsetDays = daysBetween(tStart, parseDate(task.start));
+    const barDays    = Math.max(1, daysBetween(parseDate(task.start), parseDate(task.end)));
+    const left  = offsetDays * ppd;
+    const width = Math.max(barDays * ppd, 16);
+
+    rows += `
+    <tr data-task-id="${task.id}">
+      <td class="gantt-label-col" title="${task.name}" style="font-weight:600">${task.name}</td>
+      <td class="gantt-owner-col" style="color:var(--color-text-subtle)">${task.owner || ''}</td>
+      <td class="gantt-status-col"><span class="status-badge ${task.status}">${statusLabels[task.status] || task.status}</span></td>
+      <td class="gantt-actions"><button title="Delete" onclick="deleteTask(${task.id})">🗑</button></td>
+      <td class="gantt-timeline-col">
+        <div class="gantt-bar-cell" style="width:${totalWidth}px">
+          ${todayPx > 0 && todayPx < totalWidth ? `<div style="position:absolute;left:${todayPx}px;top:0;bottom:0;width:1.5px;background:var(--brand-accent);z-index:2;pointer-events:none"></div>` : ''}
+          <div class="gantt-bar" data-task-id="${task.id}"
+            style="left:${left}px;width:${width}px;background:${task.color || '#000'}"
+            title="${task.name}: ${task.start} → ${task.end}">
+            <span style="padding:0 8px;overflow:hidden;text-overflow:ellipsis;pointer-events:none;font-size:11px">${task.name}</span>
+            <div class="resize-handle" data-resize="${task.id}"></div>
+          </div>
+        </div>
+      </td>
+    </tr>`;
+  });
+
+  container.innerHTML = `
+    <div class="gantt-wrap">
+      <table class="gantt-table">
+        <thead>
+          <tr>
+            <th class="gantt-label-col">Task</th>
+            <th class="gantt-owner-col">Owner</th>
+            <th class="gantt-status-col">Status</th>
+            <th style="width:40px"></th>
+            <th class="gantt-timeline-col" style="padding:0">
+              <div class="timeline-header">${monthHtml}</div>
+            </th>
+          </tr>
+        </thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>`;
+
+  initDrag();
+}
+
+function initDrag() {
+  // Drag bars
+  $$('.gantt-bar').forEach(bar => {
+    bar.addEventListener('mousedown', e => {
+      if (e.target.dataset.resize) return;
+      e.preventDefault();
+      const taskId = +bar.dataset.taskId;
+      const task = tasks.find(t => t.id === taskId);
+      const startX = e.clientX;
+      const origLeft = parseInt(bar.style.left);
+      bar.classList.add('dragging');
+      const ppd = pxPerDay();
+
+      const onMove = ev => {
+        const dx = ev.clientX - startX;
+        const newLeft = Math.max(0, origLeft + dx);
+        bar.style.left = newLeft + 'px';
+        const { min } = timelineBounds();
+        const dayOff = Math.round(newLeft / ppd);
+        const ns = new Date(min); ns.setDate(ns.getDate() + dayOff);
+        const dur = daysBetween(parseDate(task.start), parseDate(task.end));
+        const ne = new Date(ns); ne.setDate(ne.getDate() + dur);
+        task.start = dateStr(ns); task.end = dateStr(ne);
+        bar.title = `${task.name}: ${task.start} → ${task.end}`;
+      };
+      const onUp = () => {
+        bar.classList.remove('dragging');
+        save('oxp_tasks', tasks);
+        document.removeEventListener('mousemove', onMove);
+        document.removeEventListener('mouseup', onUp);
+      };
+      document.addEventListener('mousemove', onMove);
+      document.addEventListener('mouseup', onUp);
+    });
+  });
+
+  // Resize handles
+  $$('.resize-handle').forEach(handle => {
+    handle.addEventListener('mousedown', e => {
+      e.preventDefault(); e.stopPropagation();
+      const taskId = +handle.dataset.resize;
+      const task = tasks.find(t => t.id === taskId);
+      const bar = handle.parentElement;
+      const startX = e.clientX;
+      const origW  = parseInt(bar.style.width);
+      const ppd    = pxPerDay();
+      bar.classList.add('dragging');
+
+      const onMove = ev => {
+        const newW = Math.max(ppd, origW + ev.clientX - startX);
+        bar.style.width = newW + 'px';
+        const dur = Math.max(1, Math.round(newW / ppd));
+        const ne = new Date(parseDate(task.start));
+        ne.setDate(ne.getDate() + dur);
+        task.end = dateStr(ne);
+        bar.title = `${task.name}: ${task.start} → ${task.end}`;
+      };
+      const onUp = () => {
+        bar.classList.remove('dragging');
+        save('oxp_tasks', tasks);
+        document.removeEventListener('mousemove', onMove);
+        document.removeEventListener('mouseup', onUp);
+      };
+      document.addEventListener('mousemove', onMove);
+      document.addEventListener('mouseup', onUp);
+    });
+  });
+}
+
+window.deleteTask = id => {
+  if (!confirm('Remove this task?')) return;
+  tasks = tasks.filter(t => t.id !== id);
+  save('oxp_tasks', tasks); renderGantt();
+};
+
+$('#gantt-zoom-in').addEventListener('click', () => { ganttZoom = Math.min(ganttZoom * 1.3, 6); renderGantt(); });
+$('#gantt-zoom-out').addEventListener('click', () => { ganttZoom = Math.max(ganttZoom / 1.3, 0.3); renderGantt(); });
+
+$('#open-add-task').addEventListener('click', () => {
+  $('#task-start').value = dateStr(today);
+  $('#task-end').value   = dateStr(new Date(today.getFullYear(), today.getMonth(), today.getDate() + 14));
+  document.getElementById('modal-task').classList.add('open');
+});
+$('#close-task-modal').addEventListener('click', () => document.getElementById('modal-task').classList.remove('open'));
+$('#save-task').addEventListener('click', () => {
+  const name = $('#task-name').value.trim();
+  const start = $('#task-start').value;
+  const end   = $('#task-end').value;
+  if (!name || !start || !end) { alert('Name, start, and end are required.'); return; }
+  tasks.push({ id: nextTaskId++, name, start, end, owner: $('#task-owner').value.trim(), status: $('#task-status').value, color: $('#task-color').value, group: $('#task-group').value.trim() || 'General' });
+  save('oxp_tasks', tasks); save('oxp_next_task_id', nextTaskId);
+  document.getElementById('modal-task').classList.remove('open');
+  ['task-name','task-owner','task-group'].forEach(id => document.getElementById(id).value = '');
+  renderGantt();
+});
+
+/* ────────────────────────────────────────────────
+   PROGRAM STATUS  (doc-format reports)
+──────────────────────────────────────────────── */
+function renderReports() {
+  const list = document.getElementById('report-list');
+  if (!reports.length) { list.innerHTML = '<p style="padding:24px;color:var(--color-text-subtle);">No reports yet.</p>'; return; }
+  const sorted = [...reports].sort((a, b) => b.week - a.week);
+  list.innerHTML = sorted.map(r => {
+    const d = r.date ? parseDate(r.date).toLocaleDateString('en-US', { month:'long', day:'numeric', year:'numeric' }) : '';
+    const actionsHtml = (r.actions && r.actions.length) ? `
+      <div class="rdoc-section">
+        <div class="rdoc-section-title">📌 Action Items</div>
+        <table class="rdoc-action-table">
+          <thead><tr><th>Owner</th><th>Action</th><th>Due</th></tr></thead>
+          <tbody>${r.actions.map(a => `
+            <tr>
+              <td class="ai-owner">${a.owner}</td>
+              <td class="ai-task">${a.task}</td>
+              <td class="ai-due">${a.due}</td>
+            </tr>`).join('')}
+          </tbody>
+        </table>
+      </div>` : '';
+    return `
+    <div class="report-doc">
+      <div class="report-doc-header" onclick="toggleReport(${r.id}, this)">
+        <div class="report-doc-meta">
+          <span class="report-week-badge">Week ${r.week}</span>
+          <span class="report-date">${d}</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:var(--space-4)">
+          <div class="rag-grid">
+            <div class="rag-box green"><div class="rag-label">On Track</div><div class="rag-count">${r.green}</div></div>
+            <div class="rag-box yellow"><div class="rag-label">At Risk</div><div class="rag-count">${r.yellow}</div></div>
+            <div class="rag-box red"><div class="rag-label">Delayed</div><div class="rag-count">${r.red}</div></div>
+          </div>
+          <span class="report-chevron">▼</span>
+        </div>
+      </div>
+      <div class="report-doc-body" id="rb-${r.id}">
+        <div class="rdoc-banner">
+          <div>
+            <div class="rdoc-banner-title">OXP Project — Weekly Status Report</div>
+            <div class="rdoc-banner-meta">Week ${r.week} &nbsp;·&nbsp; ${d} &nbsp;·&nbsp; Confidential — Internal Use Only</div>
+          </div>
+          <div class="rag-grid" style="gap:var(--space-2)">
+            <div class="rdoc-rag-box green"><div class="rdoc-rag-num">${r.green}</div><div class="rdoc-rag-label">On Track</div></div>
+            <div class="rdoc-rag-box yellow"><div class="rdoc-rag-num">${r.yellow}</div><div class="rdoc-rag-label">At Risk</div></div>
+            <div class="rdoc-rag-box red"><div class="rdoc-rag-num">${r.red}</div><div class="rdoc-rag-label">Delayed</div></div>
+          </div>
+        </div>
+        <div class="rdoc-sections">
+          ${r.wins ? `<div class="rdoc-section"><div class="rdoc-section-title">✅ Accomplishments This Week</div><p>${r.wins}</p></div>` : ''}
+          ${r.wip  ? `<div class="rdoc-section"><div class="rdoc-section-title">🔄 In Progress</div><p>${r.wip}</p></div>` : ''}
+          ${r.upcoming ? `<div class="rdoc-section"><div class="rdoc-section-title">🔜 Upcoming Next Week</div><p>${r.upcoming}</p></div>` : ''}
+          ${r.risks ? `<div class="rdoc-section risk-section"><div class="rdoc-section-title">⚠️ Risks & Issues</div><p>${r.risks}</p></div>` : ''}
+          ${actionsHtml}
+        </div>
+        <div class="rdoc-footer">
+          <button class="btn danger" onclick="deleteReport(${r.id})" style="font-size:12px;padding:6px 12px">🗑 Delete</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+window.toggleReport = (id, header) => {
+  const body = document.getElementById('rb-' + id);
+  const open = body.classList.toggle('open');
+  header.classList.toggle('open', open);
+};
+window.deleteReport = id => {
+  if (!confirm('Delete this report?')) return;
+  reports = reports.filter(r => r.id !== id);
+  save('oxp_reports', reports); renderReports();
+};
+
+$('#open-add-report').addEventListener('click', () => {
+  $('#rpt-date').value = dateStr(today);
+  document.getElementById('modal-report').classList.add('open');
+});
+$('#close-report-modal').addEventListener('click', () => document.getElementById('modal-report').classList.remove('open'));
+$('#save-report').addEventListener('click', () => {
+  const week = parseInt($('#rpt-week').value);
+  const date = $('#rpt-date').value;
+  if (!week || !date) { alert('Week number and date are required.'); return; }
+  reports.push({ id: nextReportId++, week, date, wins: $('#rpt-wins').value.trim(), wip: $('#rpt-wip').value.trim(), upcoming: $('#rpt-upcoming').value.trim(), risks: $('#rpt-risks').value.trim(), green: parseInt($('#rpt-green').value) || 0, yellow: parseInt($('#rpt-yellow').value) || 0, red: parseInt($('#rpt-red').value) || 0, actions: [] });
+  save('oxp_reports', reports); save('oxp_next_report_id', nextReportId);
+  document.getElementById('modal-report').classList.remove('open');
+  ['rpt-week','rpt-wins','rpt-wip','rpt-upcoming','rpt-risks'].forEach(id => document.getElementById(id).value = '');
+  $('#rpt-green').value = $('#rpt-yellow').value = $('#rpt-red').value = 0;
+  renderReports();
+});
+
+/* ────────────────────────────────────────────────
+   PROJECT STATUS
+──────────────────────────────────────────────── */
+function renderProjectStatus() {
+  const grid = document.getElementById('ps-grid');
+  if (!grid) return;
+  const statusLabels = { 'on-track':'On Track', 'at-risk':'At Risk', 'delayed':'Delayed', 'complete':'Complete', 'not-started':'Not Started' };
+  grid.innerHTML = projectStatuses.map(p => {
+    const actionsHtml = p.actions.length ? `
+      <div class="ps-section">
+        <div class="ps-section-label">Open Action Items</div>
+        <div class="ps-actions">${p.actions.map(a => `
+          <div class="ps-action-item">
+            <span class="ps-action-owner">${a.owner}</span>
+            <span class="ps-action-desc">${a.task}${a.due !== 'TBD' ? ` <span style="color:var(--color-text-subtle);font-size:11px">(${a.due})</span>` : ''}</span>
+          </div>`).join('')}
+        </div>
+      </div>` : '';
+    const linksHtml = p.links.length ? `
+      <div class="ps-card-footer">${p.links.map(l =>
+        `<a class="ps-link" href="${l.url}" target="_blank" rel="noopener">📄 ${l.label}</a>`
+      ).join('')}</div>` : '';
+    return `
+    <div class="ps-card">
+      <div class="ps-card-header">
+        <div class="ps-card-title-block">
+          <div class="ps-card-name">${p.name}</div>
+          <div class="ps-card-meta">
+            <span>👤 ${p.owner}</span>
+            <span>📅 ${p.timeline}</span>
+          </div>
+        </div>
+        <span class="status-badge ${p.status}" style="flex-shrink:0;margin-top:2px">${statusLabels[p.status]}</span>
+      </div>
+      <div class="ps-card-body">
+        <div class="ps-section">
+          <div class="ps-section-label">Summary</div>
+          <div class="ps-section-body">${p.summary}</div>
+        </div>
+        ${p.blockers ? `<div class="ps-section"><div class="ps-section-label">🚧 Blockers</div><div class="ps-section-body blocker">${p.blockers}</div></div>` : ''}
+        ${p.risks    ? `<div class="ps-section"><div class="ps-section-label">⚠️ Risks</div><div class="ps-section-body risk">${p.risks}</div></div>` : ''}
+        ${actionsHtml}
+      </div>
+      ${linksHtml}
+    </div>`;
+  }).join('');
+}
+
+/* ────────────────────────────────────────────────
+   NEWS FEED
+──────────────────────────────────────────────── */
+function renderNews() {
+  const feed = document.getElementById('news-feed');
+  if (!newsItems.length) { feed.innerHTML = '<p style="color:var(--color-text-subtle);padding:12px 0;">No updates yet.</p>'; return; }
+  const sorted = [...newsItems].sort((a, b) => b.date.localeCompare(a.date));
+  const typeLabels = { update:'Update', milestone:'Milestone', risk:'Risk', blocker:'Blocker' };
+  feed.innerHTML = sorted.map((item, i) => `
+    <div class="news-item">
+      <div class="news-dot-col">
+        <div class="news-dot ${item.type}"></div>
+        ${i < sorted.length - 1 ? '<div class="news-line"></div>' : ''}
+      </div>
+      <div class="news-content">
+        <div class="news-meta">
+          <span class="news-tag ${item.type}">${typeLabels[item.type] || item.type}</span>
+          <span class="news-date">${item.date}</span>
+          ${item.author ? `<span class="news-author">· ${item.author}</span>` : ''}
+          <button class="news-delete" onclick="deleteNews(${item.id})">✕</button>
+        </div>
+        <div class="news-headline">${item.headline}</div>
+        ${item.body ? `<div class="news-body">${item.body}</div>` : ''}
+      </div>
+    </div>`).join('');
+}
+
+window.deleteNews = id => {
+  if (!confirm('Remove this update?')) return;
+  newsItems = newsItems.filter(n => n.id !== id);
+  save('oxp_news', newsItems); renderNews();
+};
+$('#post-news').addEventListener('click', () => {
+  const headline = $('#news-headline').value.trim();
+  if (!headline) { alert('Headline is required.'); return; }
+  newsItems.unshift({ id: nextNewsId++, type: $('#news-type').value, headline, body: $('#news-detail').value.trim(), author: $('#news-author').value.trim(), date: dateStr(today) });
+  save('oxp_news', newsItems); save('oxp_next_news_id', nextNewsId);
+  ['news-headline','news-detail'].forEach(id => document.getElementById(id).value = '');
+  renderNews();
+});
+
+/* ────────────────────────────────────────────────
+   WIKI
+──────────────────────────────────────────────── */
+function renderWiki() {
+  const grid = document.getElementById('wiki-grid');
+  if (!wikiCats.length) { grid.innerHTML = '<p style="color:var(--color-text-subtle);">No categories yet.</p>'; return; }
+  grid.innerHTML = wikiCats.map(cat => `
+    <div class="wiki-category">
+      <div class="wiki-cat-header">
+        <span class="wiki-cat-title"><span class="wiki-cat-icon">${cat.icon || '📄'}</span>${cat.name}</span>
+        <div class="wiki-cat-actions">
+          <button onclick="openAddWikiLink(${cat.id})" title="Add link">＋</button>
+          <button onclick="deleteWikiCat(${cat.id})" title="Delete category" style="color:var(--color-danger)">×</button>
+        </div>
+      </div>
+      <div class="wiki-links">
+        ${!cat.links?.length
+          ? '<div class="empty-wiki">No documents yet.</div>'
+          : cat.links.map(link => `
+            <div class="wiki-link-item">
+              <a href="${link.url || '#'}" target="_blank" rel="noopener">
+                <span class="wiki-doc-icon">📄</span>
+                <div class="wiki-link-info">
+                  <div>${link.name}</div>
+                  ${link.desc ? `<div class="wiki-link-desc">${link.desc}</div>` : ''}
+                </div>
+              </a>
+              <button class="del-wiki" onclick="deleteWikiLink(${cat.id},${link.id})">✕</button>
+            </div>`).join('')}
+      </div>
+    </div>`).join('');
+}
+
+window.openAddWikiLink = catId => {
+  document.getElementById('wiki-cat-id').value = catId;
+  ['wiki-link-name','wiki-link-url','wiki-link-desc'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('modal-wiki-link').classList.add('open');
+};
+window.deleteWikiLink = (catId, linkId) => {
+  const cat = wikiCats.find(c => c.id === catId);
+  if (cat) cat.links = cat.links.filter(l => l.id !== linkId);
+  save('oxp_wiki', wikiCats); renderWiki();
+};
+window.deleteWikiCat = catId => {
+  if (!confirm('Delete this category and all its links?')) return;
+  wikiCats = wikiCats.filter(c => c.id !== catId);
+  save('oxp_wiki', wikiCats); renderWiki();
+};
+$('#close-wiki-link-modal').addEventListener('click', () => document.getElementById('modal-wiki-link').classList.remove('open'));
+$('#save-wiki-link').addEventListener('click', () => {
+  const name = $('#wiki-link-name').value.trim();
+  if (!name) { alert('Document name is required.'); return; }
+  const catId = +document.getElementById('wiki-cat-id').value;
+  const cat   = wikiCats.find(c => c.id === catId);
+  if (!cat) return;
+  cat.links.push({ id: nextWikiLinkId++, name, url: $('#wiki-link-url').value.trim() || '#', desc: $('#wiki-link-desc').value.trim() });
+  save('oxp_wiki', wikiCats); save('oxp_next_wiki_link', nextWikiLinkId);
+  document.getElementById('modal-wiki-link').classList.remove('open');
+  renderWiki();
+});
+$('#open-add-category').addEventListener('click', () => document.getElementById('modal-wiki-cat').classList.add('open'));
+$('#close-wiki-cat-modal').addEventListener('click', () => document.getElementById('modal-wiki-cat').classList.remove('open'));
+$('#save-wiki-cat').addEventListener('click', () => {
+  const name = $('#wiki-cat-name').value.trim();
+  if (!name) { alert('Category name is required.'); return; }
+  wikiCats.push({ id: nextWikiCatId++, name, icon: $('#wiki-cat-icon').value.trim() || '📄', links: [] });
+  save('oxp_wiki', wikiCats); save('oxp_next_wiki_cat', nextWikiCatId);
+  document.getElementById('modal-wiki-cat').classList.remove('open');
+  ['wiki-cat-name','wiki-cat-icon'].forEach(id => document.getElementById(id).value = '');
+  renderWiki();
+});
+
+// Close modals on backdrop click
+$$('.modal-backdrop').forEach(bd => bd.addEventListener('click', e => { if (e.target === bd) bd.classList.remove('open'); }));
+
+/* ────────────────────────────────────────────────
+   INIT
+──────────────────────────────────────────────── */
+renderGantt();
+renderReports();
+renderNews();
+renderWiki();
+renderProjectStatus();
+</script>
+</body>
+</html>
