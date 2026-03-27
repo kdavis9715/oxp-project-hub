@@ -264,11 +264,14 @@ body {
   background: #fafafa;
 }
 
-.gantt-check-col    { width: 36px; text-align: center; padding: 0 4px; }
-.gantt-check-col input[type="checkbox"] { width: 15px; height: 15px; cursor: pointer; accent-color: var(--brand-primary); }
+.gantt-check-col    { width: 56px; text-align: center; padding: 0 4px; white-space: nowrap; }
+.gantt-check-col input[type="checkbox"] { width: 15px; height: 15px; cursor: pointer; accent-color: var(--brand-primary); vertical-align: middle; }
+.gantt-check-col .edit-btn { background: none; border: none; cursor: pointer; font-size: 13px; padding: 1px 3px; border-radius: 3px; vertical-align: middle; color: var(--color-text-subtle); }
+.gantt-check-col .edit-btn:hover { background: var(--neutral-200); }
 .gantt-label-col    { min-width: 180px; max-width: 220px; }
 .gantt-label-col.clickable { cursor: pointer; }
 .gantt-label-col.clickable:hover { color: var(--color-info); text-decoration: underline; }
+.status-badge { white-space: nowrap; }
 .gantt-owner-col    { min-width: 110px; }
 .gantt-status-col   { min-width: 100px; }
 .gantt-timeline-col { min-width: 600px; position: relative; }
@@ -661,6 +664,10 @@ hr { border: none; border-top: 1.5px solid var(--color-border); margin: var(--sp
   border: 1px solid var(--color-border);
 }
 .ps-link:hover { background: var(--neutral-200); }
+.ps-link-linear {
+  background: #f3f0ff; border-color: #c4b5fd; color: #5b21b6;
+}
+.ps-link-linear:hover { background: #ede9fe; }
 
 /* ═══════════════════════════════════════════════════════════════
    PROGRAM STATUS — Doc-style report format
@@ -1331,11 +1338,9 @@ let reports = load('oxp_reports', [
       { issue:'Architecture diagrams (AWS ↔ Azure data flow) not yet drafted',          priority:'Medium', owner:'Tenex (Nick A / CJ Hess)', status:'Not Started', resolution:'TBD' },
       { issue:'Client contract breadth of data definition sweep not reviewed',           priority:'Medium', owner:'Sarah Lawton',              status:'Not Started', resolution:'TBD' },
       { issue:'Risk 360 not yet engaged for compliance best practices',                  priority:'Medium', owner:'Trish Buyer',               status:'Not Started', resolution:'TBD' },
-      { issue:'Pilot destinations list for Wedbeds not yet established',                 priority:'Low',    owner:'K. Davis',                 status:'Not Started', resolution:'TBD' },
     ],
     decisions:[
       'Confirm Outside Auth service placement — where should the Outside Auth service live? (PJ Hoberman to propose options)',
-      'Establish pilot destinations list for Wedbeds integration',
     ],
   },
 ]);
@@ -1353,7 +1358,13 @@ const projectStatuses = [
     risks: null,
     blockers: null,
     actions: [],
-    links: [],
+    links: [
+      { label: 'Foundational Infrastructure', url: 'https://linear.app/outside/project/oxp-foundational-infrastructure-50141507813b', linear: true },
+      { label: 'Brand Customization', url: 'https://linear.app/outside/project/oxp-brand-customization-v1-76998099a5c6', linear: true },
+      { label: 'Booking Configuration', url: 'https://linear.app/outside/project/oxp-booking-configuration-v1-e4e17536710c', linear: true },
+      { label: 'Packages V1', url: 'https://linear.app/outside/project/oxp-packages-v1-072bddfeeea9', linear: true },
+      { label: 'Website Integration', url: 'https://linear.app/outside/project/oxp-website-integration-v1-1ebad3e7a35f', linear: true },
+    ],
   },
   {
     id: 2,
@@ -1415,22 +1426,6 @@ const projectStatuses = [
     links: [],
   },
   {
-    id: 6,
-    name: 'Wedbeds Integration',
-    status: 'at-risk',
-    owner: 'K. Davis',
-    timeline: 'Not yet scheduled',
-    summary: 'Integration with Wedbeds (hotel inventory). Key limitations documented: each guest requires date of birth & nationality; Inntopia has a children\'s age limitation (potential JSON API workaround); no content sync — descriptions, imagery, and room types will NOT sync, only availability is real-time; hotel onboarding is manual, so all 5,000 hotels will not be available immediately.',
-    risks: 'Wedbeds has not yet signed off on the integration. Pilot destinations/hotels list (uncertified) has not been established. Dependency on Shift4 integration.',
-    blockers: 'Wedbeds sign-off required before integration can proceed.',
-    actions: [
-      { owner: 'K. Davis', task: 'Establish list of pilot destinations/hotels not yet Wedbeds certified', due: 'TBD' },
-    ],
-    links: [
-      { label: 'Wedbeds Doc', url: 'https://docs.google.com/document/d/1OR-dhaeHMHluwW8aOUBBfg1kS8Qnuno9U81GwGwJ6yY/edit' },
-    ],
-  },
-  {
     id: 7,
     name: 'Client Onboarding — Stein',
     status: 'not-started',
@@ -1440,7 +1435,9 @@ const projectStatuses = [
     risks: 'Timeline is tight — MVP Features and Auth must both land cleanly by early June.',
     blockers: null,
     actions: [],
-    links: [],
+    links: [
+      { label: 'Stein Integration', url: 'https://linear.app/outside/project/oxp-stein-integration-93eedbb3b069', linear: true },
+    ],
   },
   {
     id: 8,
@@ -1480,7 +1477,6 @@ let newsItems = load('oxp_news', [
   { id:1,  type:'update', headline:'Auth Flow Use Cases Defined — 3 Patterns Established', body:'OXP auth architecture is now locked into three use cases: (A) Flexible/Dual Login for mid-market, (B) Outside OAuth Primary with opt-in incentive for large market, and (C) Client OAuth Primary / Whitelabel for enterprise. Prototypes for all variants completed, including a passive enrollment option for Use Case B. Business case: the core tension is that higher-paying clients demand more control, which reduces Outside\'s ability to capture first-party email data.', author:'K. Davis', date:'2026-03-26' },
   { id:2,  type:'update', headline:'Compliance & Legal Review Call Complete', body:'Key decisions from the Mar 25 call: OXP is confirmed as ReactJS on Inntopia JSON API with no source code touches (critical ahead of Inntopia\'s PCI audit in ~6 weeks). Data separation model: PII/PCI must live in Azure (Inntopia side); non-sensitive data can live in AWS. Logical separation between client data is sufficient — same table is fine as long as access is controlled. Analytics (Amplitude) must be toggleable off per tenant.', author:'K. Davis', date:'2026-03-25' },
   { id:3,  type:'update', headline:'Shift4 Integration — Dependency Flagged, No Timeline', body:'Shift4 integration is a blocking dependency for the Checkout Cart and several P1 items. Tyler Santerre to set up internal sync with Heather & Patrick to review options; joint Outside/Tenex review targeting late week of Mar 30. No timeline established yet for resolution.', author:'K. Davis', date:'2026-03-25' },
-  { id:4,  type:'update', headline:'Wedbeds Integration: Sign-Off Not Yet Obtained', body:'Wedbeds has not yet signed off on the integration. Key limitations documented: each guest requires date of birth & nationality; Inntopia has a children\'s age limitation (potential JSON API workaround being explored); no content sync for descriptions/imagery/room types (availability is real-time only); hotel onboarding is manual — not all 5,000 hotels will be available immediately. Pilot destinations list (uncertified hotels) still needs to be established.', author:'K. Davis', date:'2026-03-25' },
   { id:5,  type:'update', headline:'JSON API Roadmap Review — 3 Action Items Assigned', body:'From the JSON API meeting: (1) Outside Auth — Kate to draft high-level requirements re: consumer travel & OXP by Wed/Thu; PJ to follow with proposed options for service architecture. (2) Shift4 — Tyler Santerre to set up internal sync with Heather & Patrick; joint review targeting late next week. (3) JSON API Priority List — Nich to confirm whether current prioritization still holds given recent workarounds.', author:'K. Davis', date:'2026-03-23' },
   { id:6,  type:'update', headline:'SSO Architecture Memo Published', body:'Kate published a post-discovery SSO memo covering the three OXP login use cases. Account Linking (Use Case B) identified as future state — not MVP. Open questions for PJ Hoberman: whether Outside Travel consumer product aligns to the Outside OAuth Primary pattern and whether the same API approach applies. Consumer flow confirmed: new users create Outside Account (shadow Inntopia account); existing Outside users sign in with Outside credentials; built via API rather than formal OAuth.', author:'K. Davis', date:'2026-03-24' },
   { id:7,  type:'update', headline:'OXP Gantt Published — Apr–Sep 2026 Roadmap', body:'Project timeline formalized across 4 groups: MVP Features (Foundation Infrastructure through Website Integration, Apr–Jun), P1 Scope (Auth, Shift4, Checkout Cart targeting Jun 30; My Account Jul 15), Ongoing (JSON API HitList), and Client Onboarding (Stein MVP by Jun 15; Alterra initial Jun 30; progressive Waves 2–4 through Sep 22).', author:'K. Davis', date:'2026-03-20' },
@@ -1504,25 +1500,21 @@ let wikiCats = load('oxp_wiki', [
     { id:1,  name:'Compliance & Legal Review Notes', url:'https://docs.google.com/document/d/1RWSwHsUSN9sMTU5I28f_5mkcfuNXJ9neAXY7QbpFy5Y/edit?tab=t.kda6ajb5lqzh', desc:'Mar 25 call — PCI/data separation decisions; action items for Tenex, Sarah, Trish, Kora' },
     { id:2,  name:'Technical Architecture Doc',      url:'#', desc:'System design: ReactJS on Inntopia JSON API; AWS/Azure data split' },
     { id:3,  name:'JSON API HitList',                url:'#', desc:'Prioritized list of JSON API work items — review with Nich' },
-    { id:4,  name:'Route Search PRD',                url:'#', desc:'Product brief: Route Search for Trip Builder (uploaded PDF)' },
-    { id:5,  name:'Route Search Wireframe',          url:'#', desc:'Interactive 6-screen prototype: Trip Builder → Route search → Add to itinerary' },
   ]},
   { id:3, name:'Integrations', icon:'🔌', links:[
-    { id:1,  name:'Wedbeds Integration Doc',         url:'https://docs.google.com/document/d/1OR-dhaeHMHluwW8aOUBBfg1kS8Qnuno9U81GwGwJ6yY/edit', desc:'Dependencies, limitations, and requirements for Wedbeds integration' },
-    { id:2,  name:'Wedbeds Dependencies Brief',      url:'#', desc:'Boss-ready doc: Shift4 dependency, guest data requirements, onboarding model' },
-    { id:3,  name:'Shift4 Integration Notes',        url:'#', desc:'Considerations and options — Tyler Santerre leading internal review' },
+    { id:3,  name:'Shift4 Integration Notes', url:'#', desc:'Considerations and options — Tyler Santerre leading internal review' },
   ]},
   { id:4, name:'Design & UX', icon:'🎨', links:[
     { id:1,  name:'Trail Mix Web — Design System',   url:'https://www.figma.com/design/RmYj7a1B3e8DB7ommTk8BN/Trail-Mix--Web?m=auto&node-id=9557-229', desc:'General components (Figma)' },
     { id:2,  name:'Content Utilities — Tokens',      url:'https://www.figma.com/design/NB8xV3Np9gn8m20b4JX14w/Content-Utilities?node-id=3080-9902', desc:'Color tokens, type styles, multi-brand appearances (Figma)' },
     { id:3,  name:'OXP Auth Flows Deck',             url:'#', desc:'PPTX deck with all 4 login screen designs' },
-    { id:4,  name:'Outside Trips Usability Improvements', url:'#', desc:'Running list of product improvements from usability test sessions' },
   ]},
   { id:5, name:'Project Management', icon:'📁', links:[
     { id:1,  name:'OXP Gantt Chart (PPTX)',          url:'#', desc:'Apr–Sep 2026 timeline: MVP Features, P1 Scope, JSON API, Client Onboarding' },
-    { id:2,  name:'OXP Status Report — Week 12',     url:'#', desc:'Mar 20, 2026 — Auth, Shift4, Compliance, Wedbeds updates' },
+    { id:2,  name:'OXP Status Report — Week 1',      url:'#', desc:'Mar 20, 2026 — Auth, Shift4, Compliance updates' },
     { id:3,  name:'OXP Weekly Status Template',      url:'#', desc:'Reusable Word doc template for weekly reports' },
     { id:4,  name:'Decision Log',                    url:'#', desc:'Key decisions and rationale — see Compliance Notes for Mar 25 decisions' },
+    { id:5,  name:'Linear — OXP Team Board',         url:'https://linear.app/outside/team/LAB/all', desc:'Live project tracking: all OXP workstreams, issues, and status in Linear' },
   ]},
 ]);
 let nextWikiCatId  = load('oxp_next_wiki_cat',  6);
@@ -1612,11 +1604,10 @@ function renderGantt() {
 
     rows += `
     <tr data-task-id="${task.id}">
-      <td class="gantt-check-col"><input type="checkbox" class="task-checkbox" data-task-id="${task.id}" onchange="onTaskCheck(this)" /></td>
+      <td class="gantt-check-col"><input type="checkbox" class="task-checkbox" data-task-id="${task.id}" onchange="onTaskCheck(this)" /><button class="edit-btn" onclick="openEditTask(${task.id})" title="Edit task">✏️</button></td>
       <td class="gantt-label-col clickable" onclick="showGanttPopup(${task.id}, event)" style="font-weight:600">${task.name}</td>
       <td class="gantt-owner-col" style="color:var(--color-text-subtle)">${task.owner || ''}</td>
       <td class="gantt-status-col"><span class="status-badge ${task.status}">${statusLabels[task.status] || task.status}</span></td>
-      <td class="gantt-actions"><button title="Edit task" onclick="openEditTask(${task.id})">✏️</button></td>
       <td class="gantt-timeline-col">
         <div class="gantt-bar-cell" style="width:${totalWidth}px">
           ${todayPx > 0 && todayPx < totalWidth ? `<div style="position:absolute;left:${todayPx}px;top:0;bottom:0;width:1.5px;background:var(--brand-accent);z-index:2;pointer-events:none"></div>` : ''}
@@ -1640,7 +1631,6 @@ function renderGantt() {
             <th class="gantt-label-col">Task</th>
             <th class="gantt-owner-col">Owner</th>
             <th class="gantt-status-col">Status</th>
-            <th style="width:40px"></th>
             <th class="gantt-timeline-col" style="padding:0">
               <div class="timeline-header">${monthHtml}</div>
             </th>
@@ -1927,7 +1917,7 @@ function renderProjectStatus() {
       </div>` : '';
     const linksHtml = p.links.length ? `
       <div class="ps-card-footer">${p.links.map(l =>
-        `<a class="ps-link" href="${l.url}" target="_blank" rel="noopener">📄 ${l.label}</a>`
+        `<a class="ps-link${l.linear ? ' ps-link-linear' : ''}" href="${l.url}" target="_blank" rel="noopener">${l.linear ? '🔷' : '📄'} ${l.label}</a>`
       ).join('')}</div>` : '';
     return `
     <div class="ps-card">
@@ -2182,7 +2172,7 @@ function showGanttPopup(taskId, eventOrX, y) {
 
   if (ps) {
     const linksHtml = ps.links && ps.links.length
-      ? `<div><div class="gantt-popup-section-title">Documents</div><div class="gantt-popup-links">${ps.links.map(l=>`<a class="ps-link" href="${l.url}" target="_blank" rel="noopener">📄 ${l.label}</a>`).join('')}</div></div>`
+      ? `<div><div class="gantt-popup-section-title">Documents</div><div class="gantt-popup-links">${ps.links.map(l=>`<a class="ps-link${l.linear ? ' ps-link-linear' : ''}" href="${l.url}" target="_blank" rel="noopener">${l.linear ? '🔷' : '📄'} ${l.label}</a>`).join('')}</div></div>`
       : '';
     const actionsHtml = ps.actions && ps.actions.length
       ? `<div><div class="gantt-popup-section-title">Open Actions</div>${ps.actions.map(a=>`<div style="font-family:var(--font-ui);font-size:12px;margin-bottom:4px"><strong>${a.owner}</strong> — ${a.task||a.issue}</div>`).join('')}</div>`
@@ -2207,7 +2197,7 @@ function showGanttPopup(taskId, eventOrX, y) {
   }
 
   // Position popup near click, keep inside viewport
-  popup.style.display = 'block';
+  popup.style.display = '';   // clear any inline override
   popup.classList.add('open');
   const pw = popup.offsetWidth, ph = popup.offsetHeight;
   let px = x + 12, py = y + 12;
@@ -2218,10 +2208,11 @@ function showGanttPopup(taskId, eventOrX, y) {
 }
 
 document.getElementById('gantt-popup-close').addEventListener('click', () => {
-  document.getElementById('gantt-popup').classList.remove('open');
+  const p = document.getElementById('gantt-popup');
+  p.classList.remove('open'); p.style.display = 'none';
 });
 document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') document.getElementById('gantt-popup').classList.remove('open');
+  if (e.key === 'Escape') { const p = document.getElementById('gantt-popup'); p.classList.remove('open'); p.style.display = 'none'; }
 });
 
 /* ────────────────────────────────────────────────
