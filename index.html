@@ -264,10 +264,15 @@ body {
   background: #fafafa;
 }
 
+.gantt-check-col    { width: 36px; text-align: center; padding: 0 4px; }
+.gantt-check-col input[type="checkbox"] { width: 15px; height: 15px; cursor: pointer; accent-color: var(--brand-primary); }
 .gantt-label-col    { min-width: 180px; max-width: 220px; }
+.gantt-label-col.clickable { cursor: pointer; }
+.gantt-label-col.clickable:hover { color: var(--color-info); text-decoration: underline; }
 .gantt-owner-col    { min-width: 110px; }
 .gantt-status-col   { min-width: 100px; }
 .gantt-timeline-col { min-width: 600px; position: relative; }
+tr.task-selected td { background: #f0f6ff !important; }
 
 /* Timeline month headers */
 .timeline-header {
@@ -308,7 +313,13 @@ body {
   padding: 3px 5px; border-radius: var(--radius-sm);
   color: var(--color-text-subtle); font-size: 14px;
 }
-.gantt-actions button:hover { background: var(--neutral-200); color: var(--color-danger); }
+.gantt-actions button:hover { background: var(--neutral-200); color: var(--color-text-default); }
+#gantt-delete-selected {
+  display: none; background: var(--color-danger); color: white;
+  border: none; padding: 6px 14px; border-radius: var(--radius-sm);
+  font-family: var(--font-ui); font-size: 13px; font-weight: 700; cursor: pointer;
+}
+#gantt-delete-selected:hover { opacity: .88; }
 
 /* ═══════════════════════════════════════════════════════════════
    STATUS REPORTS
@@ -917,7 +928,8 @@ hr { border: none; border-top: 1.5px solid var(--color-border); margin: var(--sp
 <section class="section" id="tab-gantt">
   <div class="section-header">
     <span class="section-title">Project Timeline</span>
-    <div class="btn-group">
+    <div class="btn-group" style="align-items:center">
+      <button id="gantt-delete-selected" onclick="deleteSelectedTasks()">🗑 Delete Selected</button>
       <button class="btn secondary" id="gantt-zoom-out">− Zoom Out</button>
       <button class="btn secondary" id="gantt-zoom-in">+ Zoom In</button>
       <button class="btn" id="open-add-task">＋ Add Task</button>
@@ -1089,6 +1101,36 @@ hr { border: none; border-top: 1.5px solid var(--color-border); margin: var(--sp
   </div>
 </div>
 
+<!-- Edit Task -->
+<div class="modal-backdrop" id="modal-edit-task">
+  <div class="modal">
+    <h3>Edit Task</h3>
+    <input type="hidden" id="edit-task-id" />
+    <div class="form-group">
+      <label>Task Name</label>
+      <input type="text" id="edit-task-name" />
+    </div>
+    <div class="form-group">
+      <label>Owner</label>
+      <input type="text" id="edit-task-owner" />
+    </div>
+    <div class="form-group">
+      <label>Status</label>
+      <select id="edit-task-status">
+        <option value="not-started">Not Started</option>
+        <option value="on-track">On Track</option>
+        <option value="at-risk">At Risk</option>
+        <option value="delayed">Delayed</option>
+        <option value="complete">Complete</option>
+      </select>
+    </div>
+    <div class="modal-footer">
+      <button class="btn secondary" id="close-edit-task-modal">Cancel</button>
+      <button class="btn" id="save-edit-task">Save Changes</button>
+    </div>
+  </div>
+</div>
+
 <!-- Edit News Item -->
 <div class="modal-backdrop" id="modal-edit-news">
   <div class="modal">
@@ -1218,7 +1260,7 @@ let nextTaskId = load('oxp_next_task_id', 17);
 
 /* ── REPORTS ── */
 let reports = load('oxp_reports', [
-  { id:1, week:12, date:'2026-03-20',
+  { id:1, week:1, date:'2026-03-20',
     weekRange: 'March 16–20, 2026',
     author: 'Kate Davis',
     summary: 'OXP had a strong first week. Discovery with Alterra is underway, wireframe designs for Packages are in first draft, and a partnership agreement with Tenex has been fully executed. Next week shifts into kickoff & review mode — aligning on wireframes, infrastructure, and API roadmap with Inntopia while integrating Alterra\'s early feedback into planning.',
@@ -1252,7 +1294,7 @@ let reports = load('oxp_reports', [
       'Review and provide direction on Trevor\'s deal proposal contract',
     ],
   },
-  { id:2, week:13, date:'2026-03-27',
+  { id:2, week:2, date:'2026-03-27',
     weekRange: 'March 23–27, 2026',
     author: 'Kate Davis',
     summary: 'Week 13 saw significant progress on auth architecture and compliance. Three OXP auth use cases were defined and prototyped, the JSON API roadmap review completed with 3 action items assigned, and the legal & compliance call on Mar 25 locked in key PCI/data separation decisions. Shift4 integration remains the primary unresolved dependency, blocking Checkout Cart and several P1 items. Next week focuses on delivering auth requirements and resolving the Shift4 path forward.',
@@ -1570,10 +1612,11 @@ function renderGantt() {
 
     rows += `
     <tr data-task-id="${task.id}">
-      <td class="gantt-label-col" title="${task.name}" style="font-weight:600">${task.name}</td>
+      <td class="gantt-check-col"><input type="checkbox" class="task-checkbox" data-task-id="${task.id}" onchange="onTaskCheck(this)" /></td>
+      <td class="gantt-label-col clickable" onclick="showGanttPopup(${task.id}, event)" style="font-weight:600">${task.name}</td>
       <td class="gantt-owner-col" style="color:var(--color-text-subtle)">${task.owner || ''}</td>
       <td class="gantt-status-col"><span class="status-badge ${task.status}">${statusLabels[task.status] || task.status}</span></td>
-      <td class="gantt-actions"><button title="Delete" onclick="deleteTask(${task.id})">🗑</button></td>
+      <td class="gantt-actions"><button title="Edit task" onclick="openEditTask(${task.id})">✏️</button></td>
       <td class="gantt-timeline-col">
         <div class="gantt-bar-cell" style="width:${totalWidth}px">
           ${todayPx > 0 && todayPx < totalWidth ? `<div style="position:absolute;left:${todayPx}px;top:0;bottom:0;width:1.5px;background:var(--brand-accent);z-index:2;pointer-events:none"></div>` : ''}
@@ -1593,6 +1636,7 @@ function renderGantt() {
       <table class="gantt-table">
         <thead>
           <tr>
+            <th class="gantt-check-col"><input type="checkbox" id="gantt-check-all" onchange="toggleAllTasks(this)" title="Select all" /></th>
             <th class="gantt-label-col">Task</th>
             <th class="gantt-owner-col">Owner</th>
             <th class="gantt-status-col">Status</th>
@@ -1610,21 +1654,19 @@ function renderGantt() {
 }
 
 function initDrag() {
-  // Drag bars + click-to-popup
+  // Drag bars
   $$('.gantt-bar').forEach(bar => {
     bar.addEventListener('mousedown', e => {
       if (e.target.dataset.resize) return;
       e.preventDefault();
       const taskId = +bar.dataset.taskId;
       const task = tasks.find(t => t.id === taskId);
-      const startX = e.clientX; const startY = e.clientY;
+      const startX = e.clientX;
       const origLeft = parseInt(bar.style.left);
       bar.classList.add('dragging');
       const ppd = pxPerDay();
-      let moved = false;
 
       const onMove = ev => {
-        if (Math.abs(ev.clientX - startX) > 4 || Math.abs(ev.clientY - startY) > 4) moved = true;
         const dx = ev.clientX - startX;
         const newLeft = Math.max(0, origLeft + dx);
         bar.style.left = newLeft + 'px';
@@ -1636,10 +1678,9 @@ function initDrag() {
         task.start = dateStr(ns); task.end = dateStr(ne);
         bar.title = `${task.name}: ${task.start} → ${task.end}`;
       };
-      const onUp = ev => {
+      const onUp = () => {
         bar.classList.remove('dragging');
-        if (!moved) showGanttPopup(taskId, ev.clientX, ev.clientY);
-        else save('oxp_tasks', tasks);
+        save('oxp_tasks', tasks);
         document.removeEventListener('mousemove', onMove);
         document.removeEventListener('mouseup', onUp);
       };
@@ -1811,15 +1852,9 @@ function renderReports() {
         <div class="report-doc-meta">
           <span class="report-week-badge">Week ${r.week}</span>
           <span class="report-date">Week of ${weekLabel}</span>
+          <span style="color:var(--color-text-subtle);font-size:var(--type-u4)">· ${author}</span>
         </div>
-        <div style="display:flex;align-items:center;gap:var(--space-4)">
-          <div class="rag-grid">
-            <div class="rag-box green"><div class="rag-label">On Track</div><div class="rag-count">${r.green||0}</div></div>
-            <div class="rag-box yellow"><div class="rag-label">At Risk</div><div class="rag-count">${r.yellow||0}</div></div>
-            <div class="rag-box red"><div class="rag-label">Off Track</div><div class="rag-count">${r.red||0}</div></div>
-          </div>
-          <span class="report-chevron">▼</span>
-        </div>
+        <span class="report-chevron">▼</span>
       </div>
       <div class="report-doc-body" id="rb-${r.id}">
         <div class="rdoc-banner">
@@ -1829,7 +1864,6 @@ function renderReports() {
           </div>
         </div>
         <div class="rdoc-sections">
-          ${statusHtml}
           ${summaryHtml}
           ${milestoneHtml}
           ${winsHtml}
@@ -2042,6 +2076,55 @@ $('#save-wiki-cat').addEventListener('click', () => {
 $$('.modal-backdrop').forEach(bd => bd.addEventListener('click', e => { if (e.target === bd) bd.classList.remove('open'); }));
 
 /* ────────────────────────────────────────────────
+   GANTT CHECKBOX / DELETE SELECTED / EDIT TASK
+──────────────────────────────────────────────── */
+function onTaskCheck(cb) {
+  const row = cb.closest('tr');
+  row.classList.toggle('task-selected', cb.checked);
+  const any = $$('.task-checkbox:checked').length > 0;
+  document.getElementById('gantt-delete-selected').style.display = any ? 'inline-block' : 'none';
+  // sync select-all state
+  const all = $$('.task-checkbox');
+  const checked = $$('.task-checkbox:checked');
+  const allCb = document.getElementById('gantt-check-all');
+  if (allCb) allCb.indeterminate = checked.length > 0 && checked.length < all.length;
+  if (allCb) allCb.checked = checked.length === all.length && all.length > 0;
+}
+window.toggleAllTasks = cb => {
+  $$('.task-checkbox').forEach(c => { c.checked = cb.checked; onTaskCheck(c); });
+};
+window.deleteSelectedTasks = () => {
+  const ids = $$('.task-checkbox:checked').map(c => +c.dataset.taskId);
+  if (!ids.length) return;
+  if (!confirm(`Delete ${ids.length} task${ids.length > 1 ? 's' : ''}?`)) return;
+  tasks = tasks.filter(t => !ids.includes(t.id));
+  save('oxp_tasks', tasks);
+  document.getElementById('gantt-delete-selected').style.display = 'none';
+  renderGantt();
+};
+window.openEditTask = id => {
+  const t = tasks.find(t => t.id === id);
+  if (!t) return;
+  $('#edit-task-id').value     = id;
+  $('#edit-task-name').value   = t.name;
+  $('#edit-task-owner').value  = t.owner || '';
+  $('#edit-task-status').value = t.status || 'not-started';
+  document.getElementById('modal-edit-task').classList.add('open');
+};
+$('#close-edit-task-modal').addEventListener('click', () => document.getElementById('modal-edit-task').classList.remove('open'));
+$('#save-edit-task').addEventListener('click', () => {
+  const id = parseInt($('#edit-task-id').value);
+  const t  = tasks.find(t => t.id === id);
+  if (!t) return;
+  t.name   = $('#edit-task-name').value.trim() || t.name;
+  t.owner  = $('#edit-task-owner').value.trim();
+  t.status = $('#edit-task-status').value;
+  save('oxp_tasks', tasks);
+  document.getElementById('modal-edit-task').classList.remove('open');
+  renderGantt();
+});
+
+/* ────────────────────────────────────────────────
    EDIT NEWS ITEM
 ──────────────────────────────────────────────── */
 window.editNews = id => {
@@ -2082,7 +2165,9 @@ window.togglePsCard = (id, header) => {
 /* ────────────────────────────────────────────────
    GANTT TASK POPUP
 ──────────────────────────────────────────────── */
-function showGanttPopup(taskId, x, y) {
+function showGanttPopup(taskId, eventOrX, y) {
+  const x = eventOrX instanceof Event ? eventOrX.clientX : eventOrX;
+  if (eventOrX instanceof Event) y = eventOrX.clientY;
   const task   = tasks.find(t => t.id === taskId);
   if (!task) return;
   // Try to match to projectStatuses by normalising the name
